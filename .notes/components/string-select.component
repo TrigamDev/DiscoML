@@ -1,0 +1,9 @@
+<stringSelect id="string-select-example" placeholder="Placeholder" minValues=1 maxValues=3 disabled=false>
+	<selectOption value="value" default=true>
+		<description>
+			Description...
+		</description>
+		<emoji id="...">Emoji Name</emoji>
+		Label
+	</selectOption>
+</stringSelect>

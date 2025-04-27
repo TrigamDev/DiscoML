@@ -1,0 +1,4 @@
+<button id="example-button" style="link" url="https://www.example.com" disabled=false>
+	<emoji id="...">Emoji Name</emoji>
+	Button Label
+</button>
