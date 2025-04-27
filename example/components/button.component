@@ -1,4 +1,22 @@
-<button id="example-button" style="link" url="https://www.example.com" disabled=false>
-	<emoji id="...">Emoji Name</emoji>
-	Button Label
-</button>
+<actions>
+	<button id="primary-button" style="primary">
+		Primary Button
+	</button>
+
+	<button id="secondary-button" style="secondary" disabled=true>
+		Secondary Button (Disabled)
+	</button>
+
+	<button id="destructive-button" style="danger">
+		Delete RAM!
+	</button>
+
+	{ /*
+		`style` property is ignored if the button contains a link,
+		defaulting to `style="link"`
+	*/ }
+	<button id="link-button" style="link">
+		<link to="https://www.example.com">Example.com</link>
+		<emoji>🔗</emoji>
+	</button>
+</actions>

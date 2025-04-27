@@ -1,4 +1,4 @@
-<select type="string" placeholder="What fruits would you like in your salad?" min=1 max=5>
+<select id="string-select" type="string" placeholder="What fruits would you like in your salad?" min=1 max=5>
 	<option value="apple">
 		Apple
 		<emoji>🍎</emoji>

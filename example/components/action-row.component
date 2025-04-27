@@ -1,5 +1,5 @@
-<action-row id="action-row-example">
+<actions id="action-row">
 	{ /* 5 buttons */ }
 	{ /* or 1 text input */ }
 	{ /* or 1 select component */ }
-</action-row>
+</actions>
