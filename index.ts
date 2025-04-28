@@ -1,4 +1,6 @@
+import testComponent from "./test/parsing/test.component"
+
 import { Parser } from "./src/parser"
 
-const testComponent = await (Bun.file( "./test/parsing/test.component" )).text()
-const parser = new Parser( testComponent ).parse()
+const component = testComponent
+const parser = new Parser( component ).parse()

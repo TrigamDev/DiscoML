@@ -1,9 +1,28 @@
 import type { Snowflake } from "discord.js"
 
+export const allowedNodes = [
+	"container",
+	"section",
+	"separator",
+
+	"text",
+
+	"button",
+
+	"link",
+	"emoji"
+]
+
+
+
 export interface Node {
 	name: string
-	props: { name: string, value: any }[]
-	content: any
+	props: Property[]
+	content?: any
+}
+export interface Property {
+	name: string
+	value: unknown
 }
 
 // #region Layout
@@ -26,7 +45,7 @@ export interface SeparatorNode extends Node {
 		{ name: "spacing", value: "small" | "large" },
 		{ name: "divider", value: boolean }
 	],
-	content: []
+	content?: never
 }
 // #endregion
 
