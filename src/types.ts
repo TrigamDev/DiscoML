@@ -3,7 +3,7 @@ import type { Snowflake } from "discord.js"
 export interface Node {
 	name: string
 	props: { name: string, value: any }[]
-	children: any
+	content: any
 }
 
 // #region Layout
@@ -26,7 +26,7 @@ export interface SeparatorNode extends Node {
 		{ name: "spacing", value: "small" | "large" },
 		{ name: "divider", value: boolean }
 	],
-	children: []
+	content: []
 }
 // #endregion
 
@@ -34,7 +34,7 @@ export interface SeparatorNode extends Node {
 export interface TextNode extends Node {
 	name: "text",
 	props: [],
-	children: string
+	content: string
 }
 // #endregion
 
@@ -46,7 +46,7 @@ export interface ButtonNode extends Node {
 		{ name: "style", value: "primary" | "secondary" | "danger" | "link" },
 		{ name: "disabled", value: boolean }
 	],
-	children: [ string, LinkNode?, EmojiNode? ]
+	content: [ string, LinkNode?, EmojiNode? ]
 }
 // #endregion
 
@@ -56,7 +56,7 @@ export interface LinkNode extends Node {
 	props: [
 		{ name: "to", value: URL }
 	],
-	children: string
+	content: string
 }
 
 export interface EmojiNode extends Node {
@@ -64,6 +64,6 @@ export interface EmojiNode extends Node {
 	props: [
 		{ name: "id", value: Snowflake }
 	],
-	children: string
+	content: string
 }
 // #endregion
