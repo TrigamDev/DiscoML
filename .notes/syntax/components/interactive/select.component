@@ -18,6 +18,8 @@
 
 	Contents:
 	- Up to 25 <option>s
+		- If type is "user", "role", "channel", or "mentionable", these are instead
+		  treated as the default options, being auto-selected
 */ }
 
 <select id="string-select" placeholder="What fruits would you like in your salad?" min=1 max=3>
@@ -54,4 +56,17 @@
 		- [Required] 1 <text> as the option's label
 		- 1 <emoji> to display alongside the label
 		- 1 <description> to describe the option
+			- <description> is analagous to <text>, exists solely for context
 */ }
+
+<option value="apple" type="string">
+	<text>Apple</text>
+	<emoji>🍎</emoji>
+	<description>A red fruit with a stem and core</description>
+</option>
+
+<option value="480828680604614675" type="user" />
+
+<option value="1366158838931128432" type="role" />
+
+<option value="1366158669926105239" type="channel" />
