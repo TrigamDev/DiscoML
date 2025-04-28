@@ -1,0 +1,14 @@
+{ /*
+	Represents: https://discord.com/developers/docs/components/reference#container
+
+	Properties:
+	- color: Accent color of the container (in RGB)
+	- spoiler: Whether the container is a spoiler
+
+	Contents:
+	- Up to 10 components of type <section>, <separator>, <text>, <gallery>, <file>, or <actions>
+*/ }
+
+<container color=0x3F48CC spoiler=false>
+	{ /* ... */ }
+</container>

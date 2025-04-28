@@ -1,0 +1,34 @@
+{ /*
+	Represents: https://discord.com/developers/docs/components/reference#section
+
+	Properties: None
+
+	Contents:
+	- Up to 3 <text>s
+	- [Required] 1 <accessory>
+*/ }
+
+<section>
+	<header level=1>Wow!</header>
+	<text>This is a really cool section!</text>
+	<subtext>Well, maybe it's only <italic>kinda</italic> cool, but...</subtext>
+
+	<accessory>
+		<thumbnail url="https://picsum.photos/256"/>
+	</accessory>
+</section>
+
+
+
+{ /*
+	Represents: section.accessory
+
+	Properties: none
+
+	Contents:
+	- [Required] Either 1 <media> or 1 <button>
+*/ }
+
+<accessory>
+	<thumbnail url="https://picsum.photos/256"/>
+</accessory>
