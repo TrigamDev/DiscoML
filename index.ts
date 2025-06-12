@@ -1,4 +1,4 @@
-import testComponent from "./test/parsing/test.component"
+import testComponent from "./test/parsing/test.dml"
 
 import { Parser } from "./src/parser"
 

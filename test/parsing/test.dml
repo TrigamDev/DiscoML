@@ -1,4 +1,4 @@
-    among   <container>
+<container>
 	<section>
 		<header level=1>{ bot.name }</header>
 		<text>Wow! This is a cool bot!</text>
