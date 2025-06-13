@@ -1,9 +1,9 @@
-{ /*
+/*
 	Represents: https://discord.com/developers/docs/components/reference#separator
 	
 	Properties:
 	- spacing: The amount of spacing to use (either "small" or "large")
 	- divider: Whether to show a visible divider
-*/ }
+*/
 
 <separator id="separator" spacing="small" divider=true />

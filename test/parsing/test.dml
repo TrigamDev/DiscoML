@@ -1,15 +1,15 @@
 <container>
 	<section>
-		<header level=1>{ bot.name }</header>
+		<header level=1>@( bot.name )</header>
 		<text>Wow! This is a cool bot!</text>
 
 		<accessory>
 			@if ( bot.getAvatar() ) {
-				<media url={ bot.getAvatar() }>
+				<media url=@( bot.getAvatar() )>
 					A cool bot
 				</media>
 			} else {
-				<media url={ new CDN().defaultAvatar( 0 ) }>
+				<media url=@( new CDN().defaultAvatar( 0 ) )>
 					Maybe a not so cool bot
 				</media>
 			}
@@ -21,7 +21,7 @@
 	<list type="unordered">
 		@foreach ( field in displayFields ) {
 			<item>
-				<bold>{ field.label }</bold>: { field.value }
+				<bold>@( field.label )</bold>: @( field.value )
 			</item>
 		}
 	</list>

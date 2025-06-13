@@ -11,10 +11,10 @@
 		Delete RAM!
 	</button>
 
-	{ /*
+	/*
 		`style` property is ignored if the button contains a link,
 		defaulting to `style="link"`
-	*/ }
+	*/
 	<button id="link-button" style="link">
 		<link to="https://www.example.com">Example.com</link>
 		<emoji>🔗</emoji>

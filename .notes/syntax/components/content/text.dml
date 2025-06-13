@@ -1,11 +1,11 @@
-{ /*
+/*
 	Represents: https://discord.com/developers/docs/components/reference#text-display
 
 	Properties: none
 
 	Contents:
 	- A string of text
-*/ }
+*/
 
 <text>
 	Pretend this is something insightful

@@ -1,4 +1,4 @@
-{ /*
+/*
 	Represents: https://discord.com/developers/docs/components/reference#container
 
 	Properties:
@@ -7,8 +7,8 @@
 
 	Contents:
 	- Up to 10 components of type <section>, <separator>, <text>, <gallery>, <file>, or <actions>
-*/ }
+*/
 
 <container color=0x3F48CC spoiler=false>
-	{ /* ... */ }
+	/* ... */
 </container>

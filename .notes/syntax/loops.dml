@@ -1,7 +1,7 @@
 <list type="unordered">
 	@foreach ( field in displayFields ) {
 		<item>
-			<bold>{ field.label }</bold>: { field.value }
+			<bold>@( field.label )</bold>: @( field.value )
 		</item>
 	}
 </list>

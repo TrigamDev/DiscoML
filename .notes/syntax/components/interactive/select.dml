@@ -1,4 +1,4 @@
-{ /*
+/*
 	Represents:
 	- https://discord.com/developers/docs/components/reference#string-select
 	- https://discord.com/developers/docs/components/reference#user-select
@@ -20,7 +20,7 @@
 	- Up to 25 <option>s
 		- If type is "user", "role", "channel", or "mentionable", these are instead
 		  treated as the default options, being auto-selected
-*/ }
+*/
 
 <select id="string-select" placeholder="What fruits would you like in your salad?" min=1 max=3>
 	<option value="apple" type="string">
@@ -42,7 +42,7 @@
 
 
 
-{ /*
+/*
 	Represents:
 	- https://discord.com/developers/docs/components/reference#string-select-select-option-structure
 	- https://discord.com/developers/docs/components/reference#user-select-select-default-value-structure
@@ -57,7 +57,7 @@
 		- 1 <emoji> to display alongside the label
 		- 1 <description> to describe the option
 			- <description> is analagous to <text>, exists solely for context
-*/ }
+*/
 
 <option value="apple" type="string">
 	<text>Apple</text>

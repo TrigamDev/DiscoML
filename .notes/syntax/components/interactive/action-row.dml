@@ -1,12 +1,12 @@
-{ /*
+/*
 	Represents: https://discord.com/developers/docs/components/reference#action-row
 
 	Properties: none
 
 	Contents:
 	- Either 5 <button>s, 1 <text-input>, or 1 <select>
-*/ }
+*/
 
 <actions>
-	{ /* ... */ }
+	/* ... */
 </actions>
