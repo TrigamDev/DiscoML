@@ -1,12 +1,12 @@
 import { plugin, type BunPlugin } from "bun"
 
-const componentResolver: BunPlugin = {
-	name: "plugin-component-resolver",
+const discoResolver: BunPlugin = {
+	name: "plugin-disco-resolver",
 	setup ( build ) {
 		build.onLoad({ filter: /(?:\w)+\.dml/ }, async ({ path }) => {
 			const content = await ( Bun.file( path ) ).text()
-			const exports: ComponentExport = {
-				component: content,
+			const exports: DiscoImport = {
+				content: content,
 				path
 			}
 			return {
@@ -19,9 +19,9 @@ const componentResolver: BunPlugin = {
 	}
 }
 
-plugin( componentResolver )
+plugin( discoResolver )
 
-export interface ComponentExport {
-	component: string
+export interface DiscoImport {
+	content: string
 	path: string
 }

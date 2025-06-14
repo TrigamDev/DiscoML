@@ -1,5 +1,5 @@
 declare module "*.dml" {
-	const component: string
+	const content: string
 	const path: string
-	export { component, path }
+	export { content, path }
 }

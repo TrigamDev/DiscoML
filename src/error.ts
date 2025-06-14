@@ -1,5 +1,4 @@
-// Rename once lib name is decided upon
-export class CustomError extends Error {
+export class DiscoError extends Error {
 
 	constructor ( message: string, location: Location ) {
 		super( message )
@@ -7,6 +6,6 @@ export class CustomError extends Error {
 
 }
 
-export class ParseError extends CustomError {
+export class ParseError extends DiscoError {
 
 }
