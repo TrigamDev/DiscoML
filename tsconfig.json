@@ -3,6 +3,9 @@
 		"paths": {
 			"@disco/*": [ "./src/*" ],
 			"@plugin/*": [ "./plugin/*" ],
+
+			"@tokenizer/*": [ "./src/lang/tokenizer/*" ],
+			"@parser/*": [ "./src/lang/parser*" ],
 		},
 
 		// Enable latest features

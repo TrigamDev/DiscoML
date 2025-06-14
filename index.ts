@@ -1,6 +1,6 @@
-import testComponent from "./test/parsing/test.dml"
+import testComponent from "./test/lang/tokenizer/basic.dml"
 
-import { Parser } from "./src/parser"
+import { Tokenizer } from "@tokenizer/tokenizer"
 
-const component = testComponent
-const parser = new Parser( component ).parse()
+const toknenizer = new Tokenizer( testComponent )
+console.log( toknenizer.tokenize() )
