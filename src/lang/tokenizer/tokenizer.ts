@@ -102,16 +102,16 @@ export class Tokenizer {
 		let raw = ""
 
 		// Skip tag opening
-		let endingTagOpenMatch = endingTagOpen.exec( this.input.slice( this.location.position ) )
-		let tagOpenMatch = tagOpen.exec( this.input.slice( this.location.position ) )
+		const endingTagOpenMatch = endingTagOpen.exec( this.input.slice( this.location.position ) )
+		const tagOpenMatch = tagOpen.exec( this.input.slice( this.location.position ) )
 
 		if ( endingTagOpenMatch?.index === 0 ) {
-			console.log( endingTagOpenMatch )
+			isEnding = true
 			raw += endingTagOpenMatch[ 0 ]
 			this.advance( endingTagOpenMatch[ 0 ].length )
 		}
 		else if ( tagOpenMatch?.index === 0 ) {
-			console.log( tagOpenMatch )
+			isOpening = true
 			raw += tagOpenMatch[ 0 ]
 			this.advance( tagOpenMatch[ 0 ].length )
 		}
@@ -129,14 +129,20 @@ export class Tokenizer {
 		}
 
 		// Skip tag closing
-		while ( true ) {
-			const char = this.getChar()
-			if ( !tagClose.test( char ) && !tagSelfClose.test( char ) ) break
+		const tagSelfCloseMatch = tagSelfClose.exec( this.input.slice( this.location.position ) )
+		const tagCloseMatch = tagClose.exec( this.input.slice( this.location.position ) )
 
-			raw += char
-			this.advance()
+		if ( tagSelfCloseMatch?.index === 0 ) {
+			isSelfClosing = true
+			raw += tagSelfCloseMatch[ 0 ]
+			this.advance( tagSelfCloseMatch[ 0 ].length )
+		}
+		else if ( tagCloseMatch?.index === 0 ) {
+			raw += tagCloseMatch[ 0 ]
+			this.advance( tagCloseMatch[ 0 ].length )
 		}
 
+		// Create tag token
 		const tagToken: Token = {
 			type: TokenType.Tag,
 

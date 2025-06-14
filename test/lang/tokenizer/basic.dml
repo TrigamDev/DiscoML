@@ -1,3 +1,4 @@
 <container>
 	<text>Hello world</text>
+	<separator/>
 </container>
