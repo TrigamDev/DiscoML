@@ -1,1 +1,1 @@
-preload = [ "./plugin/componentResolver.ts" ]
+preload = [ "./plugin/discoResolver.ts" ]
