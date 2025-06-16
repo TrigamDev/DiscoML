@@ -1,6 +1,8 @@
-import type { DiscoImport } from "@plugin/discoResolver"
-import { endingTagOpen, lineBreak, tagClose, tagOpen, tagSelfClose, whitespace } from "@disco/constants"
 import { TokenType, type Token } from "@tokenizer/token"
+import { whitespace, lineBreak, identifier, startTagOpen, tagSelfClose, tagClose, endTagOpen } from "@disco/constants"
+
+import type { DiscoImport } from "@plugin/discoResolver"
+
 
 export class Tokenizer {
 	private input: string
@@ -11,6 +13,7 @@ export class Tokenizer {
 	private sourcePath?: string
 
 	constructor ( input: string | DiscoImport ) {
+		// Get input string
 		if ( ( input as DiscoImport )?.path ) {
 			input = input as DiscoImport
 			this.input = input.content
@@ -18,6 +21,7 @@ export class Tokenizer {
 		}
 		else this.input = input as string
 
+		// Location
 		this.location = {
 			position: 0,
 			line: 1,
@@ -30,117 +34,45 @@ export class Tokenizer {
 	/* -------------------------------------------------------------------------- */
 	public tokenize () {
 		while ( this.location.position < this.input.length ) {
+			this.consumeWhitespace()
 			const char = this.getChar()
 
-			// Skip whitespace
-			if ( whitespace.test( char ) ) {
-				this.consumeWhitespace()
-				continue
-			}
+			if ( this.matchPattern( startTagOpen ) ) this.tokenizeTag()
 
-			if ( tagOpen.test( char ) ) this.handleTag()
-			else this.handleText()
+			this.advance()
 		}
-
-		this.tokens.push({
-			type: TokenType.EndOfFile,
-
-			name: "EOF",
-			attributes: [],
-			children: [],
-			raw: "EOF",
-
-			location: {
-				start: { ... this.location },
-				end: { ... this.location }
-			}
-		})
 		
 		return this.tokens
 	}
 
-	// Handle raw text
-	private handleText (): void {
-		const start = { ... this.location }
-		let text = ""
 
-		while ( this.location.position < this.input.length ) {
-			const char = this.getChar()
-			if ( tagOpen.test( char ) ) break
-
-			text += char
-
-			this.advance()
-		}
-
-		if ( text.length <= 0 ) return
-
-		const token: Token = {
-			type: TokenType.Text,
-
-			name: "",
-			attributes: [],
-			children: [],
-			raw: text,
-
-			location: {
-				start,
-				end: { ... this.location }
-			}
-		}
-
-		this.tokens.push( token )
-	}
-
-	// Handle tags
-	private handleTag(): void {
+	private tokenizeTag (): void {
 		const start = { ... this.location }
 		let isSelfClosing = false
-		let isOpening = false
-		let isEnding = false
 
 		let raw = ""
 
-		// Skip tag opening
-		const endingTagOpenMatch = endingTagOpen.exec( this.input.slice( this.location.position ) )
-		const tagOpenMatch = tagOpen.exec( this.input.slice( this.location.position ) )
+		// Skip opening
+		if ( this.matchPattern( endTagOpen ) ) raw += this.consumePattern( endTagOpen )
+		else raw += this.consumePattern( startTagOpen )
 
-		if ( endingTagOpenMatch?.index === 0 ) {
-			isEnding = true
-			raw += endingTagOpenMatch[ 0 ]
-			this.advance( endingTagOpenMatch[ 0 ].length )
-		}
-		else if ( tagOpenMatch?.index === 0 ) {
-			isOpening = true
-			raw += tagOpenMatch[ 0 ]
-			this.advance( tagOpenMatch[ 0 ].length )
-		}
-
-		// Get tag name
 		let tagName = ""
 		while ( this.location.position < this.input.length ) {
 			const char = this.getChar()
-			if ( whitespace.test( char ) || tagClose.test( char ) ) break
+			if ( !this.matchPattern( identifier ) ) break
 
 			tagName += char
 			raw += char
-
 			this.advance()
 		}
 
-		// Skip tag closing
-		const tagSelfCloseMatch = tagSelfClose.exec( this.input.slice( this.location.position ) )
-		const tagCloseMatch = tagClose.exec( this.input.slice( this.location.position ) )
-
-		if ( tagSelfCloseMatch?.index === 0 ) {
+		// Skip closing
+		if ( this.matchPattern( tagSelfClose ) ) {
+			raw += this.consumePattern( tagSelfClose )
 			isSelfClosing = true
-			raw += tagSelfCloseMatch[ 0 ]
-			this.advance( tagSelfCloseMatch[ 0 ].length )
-		}
-		else if ( tagCloseMatch?.index === 0 ) {
-			raw += tagCloseMatch[ 0 ]
-			this.advance( tagCloseMatch[ 0 ].length )
-		}
+		} else raw += this.consumePattern( tagClose )
+
+
 
 		// Create tag token
 		const tagToken: Token = {
@@ -175,6 +107,21 @@ export class Tokenizer {
 		while ( whitespace.test( this.getChar() ) ) {
 			this.advance()
 		}
+	}
+
+	private matchPattern ( regexPattern: RegExp ): boolean {
+		const inputLeft = this.input.slice( this.location.position )
+		const match = regexPattern.exec( inputLeft )
+		return match?.index === 0
+	}
+
+	private consumePattern ( regexPattern: RegExp ): string | null {
+		const inputLeft = this.input.slice( this.location.position )
+		const match = regexPattern.exec( inputLeft )
+		if ( match?.index === 0 ) {
+			this.advance( match[ 0 ].length )
+			return match[ 0 ]
+		} else return null
 	}
 
 	/* -------------------------------------------------------------------------- */

@@ -5,10 +5,10 @@ export const comment = new RegExp( "//.*" )
 export const multilineComment = new RegExp( "/\\*.*?\\*/", "gs" )
 
 // Tags
-export const tagOpen = new RegExp( "<(?![!])" )
+export const startTagOpen = new RegExp( "<(?![!])" )
+export const endTagOpen = new RegExp( "</" )
 export const tagClose = new RegExp( ">" )
 export const tagSelfClose = new RegExp( "/>" )
-export const endingTagOpen = new RegExp( "</" )
 export const equals = new RegExp( "=" )
 
 // Interpolation
@@ -22,8 +22,8 @@ export const directiveForeach = new RegExp( "@foreach\\s*\\((.*?)\\)" )
 export const directiveElse = new RegExp( "@else" )
 
 // Identifiers and attributes
-export const identifier = new RegExp( "[a-zA-Z_][a-zA-Z0-9_]*" )
-export const attributeName = new RegExp( "[a-zA-Z_:][\\w:.-]*" )
+export const identifier = new RegExp( "^[\\w_][\\w\\d\\-_.]*" )
+export const attributeName = new RegExp( "^[\\w_:][\\w\\d\\-_:]*" )
 export const attributeValue = new RegExp( "\"[^\"]*\"|'[^']*'" )
 
 // Data types
