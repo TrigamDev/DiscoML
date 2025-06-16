@@ -6,6 +6,8 @@
 
 			"@tokenizer/*": [ "./src/lang/tokenizer/*" ],
 			"@parser/*": [ "./src/lang/parser*" ],
+
+			"@test/*": [ "./test/*" ],
 		},
 
 		// Enable latest features
