@@ -1,5 +1,5 @@
 import { TokenType, type Token } from "@tokenizer/token"
-import { whitespace, lineBreak, identifier, startTagOpen, tagSelfClose, tagClose, endTagOpen } from "@disco/constants"
+import { whitespace, lineBreak, identifier, startTagOpen, tagSelfClose, tagClose, endTagOpen, comment, multilineComment, directiveIndicator, directiveIf, directiveElse, directiveForeach, interpolationOpen } from "@disco/constants"
 
 import type { DiscoImport } from "@plugin/discoResolver"
 
@@ -38,13 +38,59 @@ export class Tokenizer {
 			const char = this.getChar()
 
 			if ( this.matchPattern( startTagOpen ) ) this.tokenizeTag()
-
-			this.advance()
+			else this.tokenizeRawText()
 		}
 		
 		return this.tokens
 	}
 
+	private tokenizeRawText (): void {
+		const start = { ... this.location }
+		let rawText = ""
+
+		// Get raw text
+		while ( this.location.position < this.input.length ) {
+			const char = this.getChar()
+			// Break upon encountering non-text
+			if ( [
+				this.matchPattern( startTagOpen ),
+				this.matchPattern( endTagOpen ),
+
+				this.matchPattern( directiveIndicator ),
+				this.matchPattern( directiveIf ),
+				this.matchPattern( directiveElse ),
+				this.matchPattern( directiveForeach ),
+
+				this.matchPattern( interpolationOpen ),
+
+				this.matchPattern( comment ),
+				this.matchPattern( multilineComment )
+			].includes( true ) ) break
+
+			rawText += char
+
+			this.advance()
+		}
+
+		if ( rawText.length <= 0 ) return
+
+		// Create text token
+		const textToken: Token = {
+			type: TokenType.Text,
+
+			name: "text",
+			attributes: [],
+			children: [],
+			raw: rawText,
+
+			location: {
+				start,
+				end: { ... this.location }
+			}
+		}
+
+		this.tokens.push( textToken )
+	}
 
 	private tokenizeTag (): void {
 		const start = { ... this.location }
