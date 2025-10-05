@@ -24,5 +24,16 @@ function StartLocationSpan(): LocationSpan {
 	};
 }
 
+function forward(locationSpan: LocationSpan, char: string) {
+	locationSpan.end.column++;
+	locationSpan.end.offset++;
+
+	if (char == '\n') {
+		locationSpan.end.column = 1;
+		locationSpan.end.line++;
+	}
+
+}
+
 export type { Location, LocationSpan };
-export { StartLocation as EmptyLocation, StartLocationSpan };
+export { StartLocation, StartLocationSpan, forward };

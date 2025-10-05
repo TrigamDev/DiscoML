@@ -1,17 +1,6 @@
 import { Lexeme, LexemeType } from "./lexeme";
 import type { LocationSpan } from "../location";
-import { StartLocationSpan } from "../location";
-
-function forward(locationSpan: LocationSpan, char: string) {
-	locationSpan.end.column++;
-	locationSpan.end.offset++;
-
-	if (char == '\n') {
-		locationSpan.end.column = 1;
-		locationSpan.end.line++;
-	}
-
-}
+import { StartLocationSpan, forward } from "../location";
 
 function lexemize(source: string): Lexeme[] {
 	if (source.length == 0) {
