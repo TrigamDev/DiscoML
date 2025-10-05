@@ -1,5 +1,5 @@
 import type { Location } from "@disco/lang/location"
-import type { LocationSpan } from "../location"
+import type { LocationSpan } from "@disco/lang/location"
 import { string } from "@disco/constants"
 
 // Token
