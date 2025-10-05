@@ -7,10 +7,14 @@
 			<media url=@( bot.getAvatar() )>
 				A cool bot
 			</media>
-		} else {
+		} @else if (new CDN()) {
 			<media url=@( new CDN().defaultAvatar( 0 ) )>
 				Maybe a not so cool bot
 			</media>
+		} @else {
+			<error>
+				Could not generate a default avatar
+			</error>
 		}
 	</accessory>
 </section>
