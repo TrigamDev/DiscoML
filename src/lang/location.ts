@@ -1,3 +1,5 @@
+import { lineBreak } from "@disco/constants";
+
 type Location = {
 	line: number,
 	column: number,
@@ -28,7 +30,7 @@ function forward(locationSpan: LocationSpan, char: string) {
 	locationSpan.end.column++;
 	locationSpan.end.offset++;
 
-	if (char == '\n') {
+	if (lineBreak.test(char)) {
 		locationSpan.end.column = 1;
 		locationSpan.end.line++;
 	}
