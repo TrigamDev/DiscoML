@@ -1,8 +1,10 @@
-import type { Location } from "@tokenizer/tokenizer"
+import type { Location } from "@disco/lang/location"
+import type { LocationSpan } from "../location"
+import { string } from "@disco/constants"
 
 // Token
 export enum TokenType {
-	Tag = "tag", // Includes the start tag, end tag, and everything inbetween
+	Tag = "tag",
 	Attribute = "attribute",
 
 	Expression = "expression",
@@ -12,17 +14,43 @@ export enum TokenType {
 	EndOfFile = "end_of_file"
 }
 
-export interface Token {
-	type: TokenType
+export class Token {
+	readonly type: TokenType
+	readonly raw: string
+	readonly location: LocationSpan
 
+	constructor ( type: TokenType, raw: string, location: LocationSpan ) {
+		this.type = type
+		this.raw = raw
+		this.location = location
+	}
+}
+
+export class TagToken extends Token {
 	name: string
 	attributes: Attribute[]
 	children: Token[]
-	raw: string
 
-	location: {
-		start: Location,
-		end: Location
+	constructor (
+		name: string,
+		attributes: Attribute[],
+		children: Token[],
+		raw: string,
+		location: LocationSpan
+	) {
+		super ( TokenType.Tag, raw, location )
+		this.name = name
+		this.attributes = attributes
+		this.children = children
+	}
+}
+
+export class TextToken extends Token {
+	content: string
+
+	constructor ( content: string, raw: string, location: LocationSpan ) {
+		super ( TokenType.Text, raw, location )
+		this.content = content
 	}
 }
 

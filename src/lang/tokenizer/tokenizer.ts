@@ -1,7 +1,8 @@
-import { TokenType, type Token } from "@tokenizer/token"
+import { TagToken, TextToken, TokenType, type Token } from "@tokenizer/token"
 import { whitespace, lineBreak, identifier, startTagOpen, tagSelfClose, tagClose, endTagOpen, comment, multilineComment, directiveIndicator, directiveIf, directiveElse, directiveForeach, interpolationOpen } from "@disco/constants"
 
 import type { DiscoImport } from "@plugin/discoResolver"
+import type { Location } from "@disco/lang/location"
 
 
 export class Tokenizer {
@@ -23,7 +24,7 @@ export class Tokenizer {
 
 		// Location
 		this.location = {
-			position: 0,
+			offset: 0,
 			line: 1,
 			column: 0
 		}
@@ -33,7 +34,7 @@ export class Tokenizer {
 	/*                                Tokenization                                */
 	/* -------------------------------------------------------------------------- */
 	public tokenize () {
-		while ( this.location.position < this.input.length ) {
+		while ( this.location.offset < this.input.length ) {
 			this.consumeWhitespace()
 			const char = this.getChar()
 
@@ -49,7 +50,7 @@ export class Tokenizer {
 		let rawText = ""
 
 		// Get raw text
-		while ( this.location.position < this.input.length ) {
+		while ( this.location.offset < this.input.length ) {
 			const char = this.getChar()
 			// Break upon encountering non-text
 			if ( [
@@ -75,19 +76,13 @@ export class Tokenizer {
 		if ( rawText.length <= 0 ) return
 
 		// Create text token
-		const textToken: Token = {
-			type: TokenType.Text,
-
-			name: "text",
-			attributes: [],
-			children: [],
-			raw: rawText,
-
-			location: {
+		const textToken: TextToken = new TextToken(
+			rawText, rawText,
+			{
 				start,
 				end: { ... this.location }
 			}
-		}
+		)
 
 		this.tokens.push( textToken )
 	}
@@ -103,7 +98,7 @@ export class Tokenizer {
 		else raw += this.consumePattern( startTagOpen )
 
 		let tagName = ""
-		while ( this.location.position < this.input.length ) {
+		while ( this.location.offset < this.input.length ) {
 			const char = this.getChar()
 			if ( !this.matchPattern( identifier ) ) break
 
@@ -121,19 +116,16 @@ export class Tokenizer {
 
 
 		// Create tag token
-		const tagToken: Token = {
-			type: TokenType.Tag,
-
-			name: tagName,
-			attributes: [],
-			children: [],
+		const tagToken: TagToken = new TagToken(
+			tagName,
+			[],
+			[],
 			raw,
-
-			location: {
+			{
 				start,
 				end: { ... this.location }
 			}
-		}
+		)
 
 		this.tokens.push( tagToken )
 	}
@@ -142,7 +134,7 @@ export class Tokenizer {
 	/*                             Input manipulation                             */
 	/* -------------------------------------------------------------------------- */
 	private getChar ( peekAhead: number = 0 ): string {
-		return this.input[ this.location.position + peekAhead ]
+		return this.input[ this.location.offset + peekAhead ]
 	}
 
 	private matchChar ( target: string, peekAhead: number = 0 ): boolean {
@@ -156,13 +148,13 @@ export class Tokenizer {
 	}
 
 	private matchPattern ( regexPattern: RegExp ): boolean {
-		const inputLeft = this.input.slice( this.location.position )
+		const inputLeft = this.input.slice( this.location.offset )
 		const match = regexPattern.exec( inputLeft )
 		return match?.index === 0
 	}
 
 	private consumePattern ( regexPattern: RegExp ): string | null {
-		const inputLeft = this.input.slice( this.location.position )
+		const inputLeft = this.input.slice( this.location.offset )
 		const match = regexPattern.exec( inputLeft )
 		if ( match?.index === 0 ) {
 			this.advance( match[ 0 ].length )
@@ -175,25 +167,13 @@ export class Tokenizer {
 	/* -------------------------------------------------------------------------- */
 	private advance ( steps: number = 1 ): void {
 		if ( lineBreak.test( this.getChar() ) ) {
-			this.location.position += steps
+			this.location.offset += steps
 			this.location.column = 0
 			this.location.line++
 		} else {
 			// Move right
-			this.location.position += steps
+			this.location.offset += steps
 			this.location.column += steps
 		}
 	}
-}
-
-/* -------------------------------------------------------------------------- */
-/*                                    Types                                   */
-/* -------------------------------------------------------------------------- */
-
-// Location
-export interface Location {
-	position: number
-
-	line: number
-	column: number
 }
