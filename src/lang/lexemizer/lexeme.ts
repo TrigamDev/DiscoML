@@ -1,7 +1,9 @@
+import type { LocationSpan } from "../location";
+
 enum LexemeType {
-	Whitespace = "Whitespace",
-	Special = "Special",
-	Word = "Word"
+	Whitespace,
+	Special,
+	Word
 }
 
 const whitespaces = /\s/,
@@ -12,10 +14,12 @@ const whitespaces = /\s/,
 class Lexeme {
 	readonly type: LexemeType;
 	content: string;
+	readonly locationSpan: LocationSpan;
 
-	constructor(type: LexemeType, char = "") {
+	constructor(type: LexemeType, char: string, location: LocationSpan) {
 		this.type = type;
 		this.content = char;
+		this.locationSpan = structuredClone(location);
 	}
 
 	static typeFromChar(char: string): LexemeType {
@@ -30,8 +34,8 @@ class Lexeme {
 		return LexemeType.Special;
 	}
 
-	static fromChar(char: string): Lexeme {
-		return new Lexeme(this.typeFromChar(char), char);
+	static fromChar(char: string, location: LocationSpan): Lexeme {
+		return new Lexeme(this.typeFromChar(char), char, location);
 	}
 }
 
