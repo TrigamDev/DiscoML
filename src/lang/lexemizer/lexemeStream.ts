@@ -1,16 +1,15 @@
 import { Lexeme, LexemeType } from "./lexeme";
-import type { LocationSpan } from "../location";
-import { StartLocationSpan, forward } from "../location";
+import { LocationSpan } from "../location";
 
 function lexemize(source: string): Lexeme[] {
 	if (source.length == 0) {
 		return [];
 	}
 
-	let locationSpan: LocationSpan = StartLocationSpan();
+	let locationSpan: LocationSpan = new LocationSpan();
 	const lexemes: Lexeme[] = [];
 
-	forward(locationSpan, source[0]);
+	locationSpan.forward(source[0]);
 
 	let current: Lexeme = Lexeme.fromChar(source[0], locationSpan);
 
@@ -22,14 +21,13 @@ function lexemize(source: string): Lexeme[] {
 		) {
 			lexemes.push(current);
 			locationSpan = structuredClone(current.locationSpan);
-			locationSpan.start = structuredClone(locationSpan.end);
+			locationSpan.snapToEnd();
 			current = Lexeme.fromChar(char, locationSpan);
-
-			forward(current.locationSpan, char);
+			current.locationSpan.forward(char);
 			continue;
 		}
 
-		forward(current.locationSpan, char);
+		current.locationSpan.forward(char);
 		current.content += char;
 	}
 
@@ -55,6 +53,15 @@ class LexemeStream {
 		}
 
 		return this.lexemes[this.i++];
+	}
+
+	nextNonWhitespace(): Lexeme | null {
+		let current = this.next();
+		while (current?.type == LexemeType.Whitespace) {
+			current = this.next();
+		}
+
+		return current;
 	}
 
 	drain(): Lexeme[] {

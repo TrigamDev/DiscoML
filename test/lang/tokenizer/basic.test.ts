@@ -1,12 +1,12 @@
 import { expect, test } from "bun:test"
 
-import { Tokenizer } from "@disco/lang/tokenizer/tokenizer"
+import { TokenStream } from "@disco/lang/tokenizer/tokenStream"
 import { TokenType } from "@disco/lang/tokenizer/token"
 
 import basicComponent from "@test/lang/tokenizer/basic.dml"
 
 test("basic", () => {
-	const toknenizer = new Tokenizer(basicComponent)
+	const toknenizer = new TokenStream(basicComponent)
 	const tokens = toknenizer.tokenize()
 	return; // TODO: remove after im finished adding lexemizer tests
 	console.log(basicComponent)

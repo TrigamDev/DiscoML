@@ -1,7 +1,7 @@
 import testComponent from "@test/lang/tokenizer/basic.dml"
 
-import { Tokenizer } from "@tokenizer/tokenizer"
+import { TokenStream } from "@disco/lang/tokenizer/tokenStream"
 
-const toknenizer = new Tokenizer( testComponent )
+const toknenizer = new TokenStream(testComponent)
 const tokens = toknenizer.tokenize()
-console.log( tokens )
+console.log(tokens)

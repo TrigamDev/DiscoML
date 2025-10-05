@@ -1,11 +1,11 @@
-export class DiscoError extends Error {
-
-	constructor ( message: string, location: Location ) {
-		super( message )
+export class XmlParseError extends Error {
+	constructor(message?: string, options?: ErrorOptions) {
+		super(message, options);
 	}
-
 }
 
-export class ParseError extends DiscoError {
-
+export class DmlParseError extends Error {
+	constructor(message?: string, options?: ErrorOptions) {
+		super(message, options);
+	}
 }
