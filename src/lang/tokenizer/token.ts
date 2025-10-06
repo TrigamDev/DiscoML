@@ -14,6 +14,7 @@ enum TokenType {
 	CommentDmlEnd, // */
 	CommentDmlSingle, // //
 	If, // if
+	Else, // else
 	ForEach, // foreach
 	In, // in
 	BracketOpen, // (
