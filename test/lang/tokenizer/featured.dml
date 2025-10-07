@@ -1,4 +1,8 @@
 <container>
+	/*
+		This section gives some cool
+		info about the bot!
+	*/
 	<section>
 		<header level=1>@( bot.name )</header>
 		<text>Wow! This is a cool bot!</text>
@@ -18,6 +22,7 @@
 
 	<separator spacing="small" divider=true />
 
+	// Display a list of fields, each bolded
 	<list type="unordered">
 		@foreach ( field in displayFields ) {
 			<item>
@@ -25,4 +30,11 @@
 			</item>
 		}
 	</list>
+
+	<!-- XML-style comments are also cool -->
+
+	<!--
+		And multiline XML-style
+		comments, too
+	-->
 </container>

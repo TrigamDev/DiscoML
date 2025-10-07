@@ -1,37 +1,60 @@
 // Whitespace and comments
-export const whitespace = new RegExp( "[\\s\\r\\n\\t\\f]+" )
-export const lineBreak = new RegExp( "(\\r\\n|\\r|\\n|\\f)" )
-export const comment = new RegExp( "//.*" )
-export const commentMultiStart = new RegExp( "/\\*", "gs" )
-export const commentMultiEnd = new RegExp( "\\*/", "gs" )
-export const commentMultiXmlStart = new RegExp( "<!--", "gs" )
-export const commentMultiXmlEnd = new RegExp( "-->", "gs" )
+const whitespace = /\s+/v
+const lineBreak = /\r\n|\r|\n|\f/v
+const comment = /\/\/(?<comment_content>.*)/v
+const commentMultiline = /\/\*(?<comment_content>.*)\*\//sv
+const commentXml = /<!--(?<comment_content>.*?)-->/sv
 
 // Tags
-export const startTagOpen = new RegExp( "<(?![!])" )
-export const endTagOpen = new RegExp( "</" )
-export const tagClose = new RegExp( ">" )
-export const tagSelfClose = new RegExp( "/>" )
-export const equals = new RegExp( "=" )
-
-// Interpolation
-export const interpolationOpen = new RegExp( "{{" )
-export const interpolationClose = new RegExp( "}}" )
+const startTagOpen = /<(?![!])/v
+const endTagOpen = /<\//v
+const tagClose = />/v
+const tagSelfClose = /\/>/v
+const equals = /[=]/v
 
 // Directives
-export const directiveIndicator = new RegExp( "@" )
-export const directiveIf = new RegExp( "@if\\s*\\((.*?)\\)" )
-export const directiveForeach = new RegExp( "@foreach\\s*\\((.*?)\\)" )
-export const directiveElse = new RegExp( "@else" )
+const directiveIndicator = /@/v
+const directiveIfIndicator = /@if/v
+const directiveElseIndicator = /@else/v
+const directiveForeachIndicator = /@foreach/v
+const directiveContent = /(?:\((?<directive_content>.*)\))/v
 
 // Identifiers and attributes
-export const identifier = new RegExp( "^[\\w_][\\w\\d\\-_.]*" )
-export const attributeName = new RegExp( "^[\\w_:][\\w\\d\\-_:]*" )
-export const attributeValue = new RegExp( "\"[^\"]*\"|'[^']*'" )
+const identifier = /[\p{L}\p{N}\-_]*/v
+const attributeValue = /\"[^\"]*\"|'[^']*'/v
 
 // Data types
-export const string = new RegExp( "\"[^\"]*\"" )
-export const stringSemi = new RegExp( "'[^']*'" )
-export const number = new RegExp( "\\b\\d+(?:\\.\\d+)?(?:[eE][+-]?\\d+)?\\b" )
-export const boolean = new RegExp( "true|false|True|False" )
-export const nullValue = new RegExp( "null|Null" )
+const string = /"(?:[^"\\]|\\.)*"/v
+const stringSemi = /'(?:[^'\\]|\\.)*'/v
+const number = /[\-]*\p{N}+(?:\.\p{N}+)?(?:[eE][+\-]?\p{N}+)?/v
+const boolean = /true|false/v
+const nullValue = /null/v
+
+const word = /[\p{L}\p{N}]/v
+
+
+export {
+	attributeValue,
+	boolean,
+	comment,
+	commentMultiline,
+	commentXml,
+	directiveContent,
+	directiveElseIndicator,
+	directiveForeachIndicator,
+	directiveIfIndicator,
+	directiveIndicator,
+	endTagOpen,
+	equals,
+	identifier,
+	lineBreak,
+	nullValue,
+	number,
+	startTagOpen,
+	string,
+	stringSemi,
+	tagClose,
+	tagSelfClose,
+	whitespace,
+	word
+}
