@@ -1,3 +1,8 @@
+/*
+	eslint-disable
+	no-unused-vars
+*/
+
 import { LocationSpan } from "@disco/lang/location"
 
 enum TokenType {
@@ -5,7 +10,7 @@ enum TokenType {
 	OpeningTagEnd, // >
 	ChildlessTagEnd, // />
 	ClosingTag, // </tagname> // they have no attributes
-	AttributeStart, // attributename=
+	AttributeStart, // Attributename=
 	String, // "text here"
 	CommentXmlStart, // <!--
 	CommentXmlEnd, // -->
@@ -13,28 +18,34 @@ enum TokenType {
 	CommentDmlStart, // /*
 	CommentDmlEnd, // */
 	CommentDmlSingle, // //
-	If, // if
-	Else, // else
-	ForEach, // foreach
-	In, // in
+	If, // If
+	Else, // Else
+	ForEach, // Foreach
+	In, // In
 	BracketOpen, // (
 	BracketClose, // )
 	BracketWaveOpen, // {
 	BracketWaveClose, // }
-	Identifier, //[a-zA-Z_][\w_]*
-	PairContent, //anything between two pairs of anything
+	Identifier, // [a-zA-Z_][\w_]*
+	PairContent // Anything between two pairs of anything
 }
 
 class Token {
-	readonly type: TokenType;
-	readonly locationSpan: LocationSpan;
-	readonly content: string | null;
+	readonly type: TokenType
+	readonly locationSpan: LocationSpan
+	readonly content: string | null
 
-	constructor(type: TokenType, locationSpan: LocationSpan, content?: string) {
-		this.type = type;
-		this.locationSpan = locationSpan;
-		this.content = content ?? null;
+	constructor (
+		type: TokenType,
+		locationSpan: LocationSpan,
+		content?: string
+	) {
+		this.type = type
+		this.locationSpan = locationSpan
+		this.content = content ?? null
 	}
 }
 
-export { Token, TokenType };
+export {
+	Token, TokenType
+}

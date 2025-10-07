@@ -191,7 +191,7 @@ export default defineConfig( [
 			} ],
 			"@stylistic/eol-last": [ "warn", "always" ],
 			"@stylistic/function-call-argument-newline": [ "warn", "consistent" ],
-			"@stylistic/function-paren-newline": [ "warn", { minItems: 5 } ],
+			"@stylistic/function-paren-newline": "off",
 			"@stylistic/implicit-arrow-linebreak": [ "warn", "beside" ],
 			"@stylistic/jsx-curly-newline": [ "warn", {
 				singleline: "forbid",
@@ -390,7 +390,7 @@ export default defineConfig( [
 				  to improve readability
 			*/
 			"complexity": [ "warn", {
-				max: 10,
+				max: 20,
 				variant: "modified"
 			} ],
 			"@stylistic/jsx-max-props-per-line": [ "warn", { maximum: 3 } ],
@@ -398,7 +398,7 @@ export default defineConfig( [
 			"max-classes-per-file": "off",
 			"max-depth": [ "warn", { max: 4 } ],
 			"@import/max-dependencies": "off",
-			"@stylistic/max-len": [ "warn", { code: 80 } ],
+			"@stylistic/max-len": [ "warn", { code: 100 } ],
 			"max-lines": [ "warn", {
 				max: 350,
 				skipBlankLines: true,
@@ -515,7 +515,7 @@ export default defineConfig( [
 			"no-label-var": "warn",
 			"no-magic-numbers": [ "warn", {
 				ignore: [ 0 ]
-			}],
+			} ],
 			"prefer-named-capture-group": "warn",
 			"radix": [ "error", "as-needed" ],
 			"symbol-description": "warn",
@@ -565,9 +565,11 @@ export default defineConfig( [
 			"no-self-assign": "warn",
 			"no-self-compare": "warn",
 			"no-setter-return": "warn",
-			"@import/no-unassigned-import": [ "warn", { allow: [
-				"*.css"
-			] } ],
+			"@import/no-unassigned-import": [ "warn", {
+				allow: [
+					"*.css"
+				]
+			} ],
 			"no-undef-init": "warn",
 			"no-unneeded-ternary": "warn",
 			"no-unreachable": "warn",
@@ -664,11 +666,13 @@ export default defineConfig( [
 				- Features or functionality that's deprecated or
 				  otherwise lacking, and should be replaced with alternatives
 			*/
-			"@depend/ban-dependencies": [ "error", { presets: [
-				"microutilities",
-				"native",
-				"preferred"
-			] } ],
+			"@depend/ban-dependencies": [ "error", {
+				presets: [
+					"microutilities",
+					"native",
+					"preferred"
+				]
+			} ],
 			"@import/no-deprecated": "error",
 			"no-octal-escape": "error",
 			"no-proto": "error",
