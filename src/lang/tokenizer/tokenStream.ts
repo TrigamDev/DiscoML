@@ -11,9 +11,7 @@ import { XmlParseError } from "@disco/error";
 export class TokenStream {
 	private lexemes: LexemeStream;
 	private tokenBacklog: Token[] = [];
-
-	private location = new LocationSpan;
-	private sourcePath?: string
+	private sourcePath: string | null = null;
 
 	constructor(input: string | DiscoImport) {
 		if ((input as DiscoImport)?.path) {
@@ -23,6 +21,14 @@ export class TokenStream {
 		} else {
 			this.lexemes = new LexemeStream(input as string);
 		}
+	}
+
+	// PairedContent is anything between two matching things,
+	// like brackets, wave brackets, xml/dml comments, etc.
+	getPairedContent(end: string): Token {
+		// TODO: consume all lexemes until `end` is hit
+		// TODO: figure out if `end` should be a string, regex, or Lexeme[]
+		// currently, the third option looks the most "sensible"?
 	}
 
 	// <

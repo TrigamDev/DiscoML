@@ -22,7 +22,7 @@ enum TokenType {
 	BracketWaveOpen, // {
 	BracketWaveClose, // }
 	Identifier, //[a-zA-Z_][\w_]*
-	evaluable, //anything between two normal brackets
+	PairContent, //anything between two pairs of anything
 }
 
 class Token {
