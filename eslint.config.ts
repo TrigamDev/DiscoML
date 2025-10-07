@@ -414,7 +414,7 @@ export default defineConfig( [
 				max: 5,
 				countVoidThis: true
 			} ],
-			"max-statements": [ "warn", 10, { ignoreTopLevelFunctions: false } ],
+			"max-statements": [ "warn", 50, { ignoreTopLevelFunctions: false } ],
 			"@stylistic/max-statements-per-line": [ "warn", {
 				max: 3,
 				ignoredNodes: [ "BreakStatement" ]
@@ -513,7 +513,9 @@ export default defineConfig( [
 				allowNew: true
 			} ],
 			"no-label-var": "warn",
-			"no-magic-numbers": "warn",
+			"no-magic-numbers": [ "warn", {
+				ignore: [ 0 ]
+			}],
 			"prefer-named-capture-group": "warn",
 			"radix": [ "error", "as-needed" ],
 			"symbol-description": "warn",

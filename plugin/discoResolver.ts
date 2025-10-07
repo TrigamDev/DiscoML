@@ -1,20 +1,23 @@
 import { plugin } from "bun"
 
-await plugin({
+await plugin( {
 	name: "plugin-disco-resolver",
 	setup ( build ) {
-		build.onLoad({ filter: /\.dml$/ }, async ({ path }) => {
-			const content = await ( Bun.file( path ) ).text()
+		build.onLoad( { filter: /\.dml$/v }, async ( { path } ) => {
+			const content = await Bun.file( path ).text()
 
 			return {
 				exports: {
-					default: { content, path } as DiscoImport
+					default: {
+						content,
+						path
+					} as DiscoImport
 				},
 				loader: "object"
 			}
-		})
+		} )
 	}
-})
+} )
 
 export interface DiscoImport {
 	content: string
