@@ -1,5 +1,8 @@
+/* eslint-disable @import/unambiguous */
 declare module "*.dml" {
 	const content: string
 	const path: string
-	export { content, path }
+	export {
+		content, path
+	}
 }

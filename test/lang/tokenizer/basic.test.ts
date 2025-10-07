@@ -1,3 +1,4 @@
+/* eslint-disable no-unreachable */
 
 import { TokenType } from "@disco/lang/tokenizer/token"
 import { TokenStream } from "@disco/lang/tokenizer/tokenStream"

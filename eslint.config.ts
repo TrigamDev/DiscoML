@@ -1,7 +1,6 @@
 /*
 	eslint-disable
-	no-magic-numbers,
-	@stylistic/max-len
+	no-magic-numbers
 */
 
 import jseslint from "@eslint/js"
