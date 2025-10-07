@@ -1,76 +1,40 @@
-import type { Location } from "@disco/lang/location"
-import type { LocationSpan } from "@disco/lang/location"
-import { string } from "@disco/constants"
+import { LocationSpan } from "@disco/lang/location"
 
-// Token
-export enum TokenType {
-	Tag = "tag",
-	Attribute = "attribute",
-
-	Expression = "expression",
-	Directive = "directive",
-	
-	Text = "text",
-	EndOfFile = "end_of_file"
+enum TokenType {
+	OpeningTagStart, // <tagname
+	OpeningTagEnd, // >
+	ChildlessTagEnd, // />
+	ClosingTag, // </tagname> // they have no attributes
+	AttributeStart, // attributename=
+	String, // "text here"
+	CommentXmlStart, // <!--
+	CommentXmlEnd, // -->
+	DmlIndicator, // @
+	CommentDmlStart, // /*
+	CommentDmlEnd, // */
+	CommentDmlSingle, // //
+	If, // if
+	Else, // else
+	ForEach, // foreach
+	In, // in
+	BracketOpen, // (
+	BracketClose, // )
+	BracketWaveOpen, // {
+	BracketWaveClose, // }
+	Identifier, //[a-zA-Z_][\w_]*
+	evaluable, //anything between two normal brackets
 }
 
-export class Token {
-	readonly type: TokenType
-	readonly raw: string
-	readonly location: LocationSpan
+class Token {
+	readonly type: TokenType;
+	readonly locationSpan: LocationSpan;
+	readonly content: string | null;
 
-	constructor ( type: TokenType, raw: string, location: LocationSpan ) {
-		this.type = type
-		this.raw = raw
-		this.location = location
+	constructor(type: TokenType, locationSpan: LocationSpan, content?: string) {
+		this.type = type;
+		this.locationSpan = locationSpan;
+		this.content = content ?? null;
 	}
 }
 
-export class TagToken extends Token {
-	name: string
-	attributes: Attribute[]
-	children: Token[]
-
-	constructor (
-		name: string,
-		attributes: Attribute[],
-		children: Token[],
-		raw: string,
-		location: LocationSpan
-	) {
-		super ( TokenType.Tag, raw, location )
-		this.name = name
-		this.attributes = attributes
-		this.children = children
-	}
-}
-
-export class TextToken extends Token {
-	content: string
-
-	constructor ( content: string, raw: string, location: LocationSpan ) {
-		super ( TokenType.Text, raw, location )
-		this.content = content
-	}
-}
-
-// Attributes
-export enum AttributeType {
-	String = "string",
-	Number = "number",
-	Boolean = "boolean"
-}
-
-export interface Attribute {
-	type: AttributeType,
-
-	name: string
-	value: any
-
-	location: {
-		start: Location,
-		end: Location
-	}
-
-	raw: string
-}
+export { Token, TokenType };

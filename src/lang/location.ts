@@ -1,41 +1,56 @@
 import { lineBreak } from "@disco/constants";
 
-type Location = {
-	line: number,
-	column: number,
+class Location {
+	line: number
+	column: number
 	offset: number
-}
-
-type LocationSpan = {
-	start: Location,
-	end: Location
-};
-
-function StartLocation(): Location {
-	return {
-		line: 1,
-		column: 1,
-		offset: 0
-	};
-}
-
-function StartLocationSpan(): LocationSpan {
-	return {
-		start: StartLocation(),
-		end: StartLocation()
-	};
-}
-
-function forward(locationSpan: LocationSpan, char: string) {
-	locationSpan.end.column++;
-	locationSpan.end.offset++;
-
-	if (lineBreak.test(char)) {
-		locationSpan.end.column = 1;
-		locationSpan.end.line++;
+	constructor(line = 1, column = 1, offset = 0) {
+		this.line = line;
+		this.column = column;
+		this.offset = offset;
 	}
 
+	clone() {
+		return structuredClone(this);
+	}
+
+	toString() {
+		return `line ${this.line}, column ${this.column}`;
+	}
 }
 
-export type { Location, LocationSpan };
-export { StartLocation, StartLocationSpan, forward };
+class LocationSpan {
+	start: Location
+	end: Location
+	constructor(start = new Location(), end = new Location()) {
+		this.start = start;
+		this.end = end;
+	}
+
+	clone() {
+		return structuredClone(this);
+	}
+
+	snapToEnd() {
+		this.end = this.start.clone();
+	}
+
+	forward(char: string) {
+		this.end.column++;
+		this.end.offset++;
+
+		if (lineBreak.test(char)) {
+			this.end.column = 1;
+			this.end.line++;
+		}
+	}
+
+	between(other: LocationSpan): LocationSpan {
+		const start = this.start.offset > other.start.offset ? this.start : other.start;
+		const end = this.end.offset > other.end.offset ? this.end : other.end;
+
+		return new LocationSpan(start.clone(), end.clone());
+	}
+};
+
+export { Location, LocationSpan };
