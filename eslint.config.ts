@@ -32,7 +32,10 @@ export default defineConfig( [
 			parserOptions: { projectService: true },
 			ecmaVersion: "latest",
 			sourceType: "module",
-			globals: globals.nodeBuiltin
+			globals: {
+				... globals.nodeBuiltin,
+				"Bun": "readonly"
+			}
 		},
 
 		rules: {
@@ -239,7 +242,11 @@ export default defineConfig( [
 			"@stylistic/newline-per-chained-call": [ "warn", { ignoreChainWithDepth: 2 } ],
 			"@stylistic/no-multiple-empty-lines": "warn",
 			"@stylistic/nonblock-statement-body-position": [ "warn", "beside" ],
-			"@stylistic/object-curly-newline": [ "warn", { minProperties: 2 } ],
+			"@stylistic/object-curly-newline": [ "warn", {
+				minProperties: 2,
+				multiline: true,
+				consistent: true
+			} ],
 			"@stylistic/object-property-newline": "warn",
 			"@stylistic/operator-linebreak": [ "warn", "before" ],
 			"@stylistic/padded-blocks": [ "warn", "never" ],
