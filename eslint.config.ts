@@ -1,7 +1,6 @@
 /*
 	eslint-disable
 	no-magic-numbers,
-	max-lines,
 	@stylistic/max-len
 */
 
@@ -275,14 +274,14 @@ export default defineConfig( [
 					"ts": "never"
 				}
 			} ],
-			"@import/exports-last": "warn",
+			"@import/exports-last": "off",
 			"@import/first": "warn",
 			"func-style": [ "warn", "declaration", {
 				allowArrowFunctions: true,
 				allowTypeAnnotation: true
 			} ],
 			"grouped-accessor-pairs": "off",
-			"@import/group-exports": "warn",
+			"@import/group-exports": "off",
 			"init-declarations": [ "warn", "always" ],
 			"logical-assignment-operators": [ "warn", "always" ],
 			"no-irregular-whitespace": "warn",
@@ -399,16 +398,8 @@ export default defineConfig( [
 			"max-depth": [ "warn", { max: 4 } ],
 			"@import/max-dependencies": "off",
 			"@stylistic/max-len": [ "warn", { code: 100 } ],
-			"max-lines": [ "warn", {
-				max: 350,
-				skipBlankLines: true,
-				skipComments: true
-			} ],
-			"max-lines-per-function": [ "warn", {
-				max: 50,
-				skipBlankLines: true,
-				skipComments: true
-			} ],
+			"max-lines": "off",
+			"max-lines-per-function": "off",
 			"max-nested-callbacks": [ "warn", { max: 10 } ],
 			"max-params": [ "warn", {
 				max: 5,

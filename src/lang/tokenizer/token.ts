@@ -5,7 +5,7 @@
 
 import { LocationSpan } from "@disco/lang/location"
 
-enum TokenType {
+export enum TokenType {
 	OpeningTagStart, // <tagname
 	OpeningTagEnd, // >
 	ChildlessTagEnd, // />
@@ -30,7 +30,7 @@ enum TokenType {
 	PairContent // Anything between two pairs of anything
 }
 
-class Token {
+export class Token {
 	readonly type: TokenType
 	readonly locationSpan: LocationSpan
 	readonly content: string | null
@@ -44,8 +44,4 @@ class Token {
 		this.locationSpan = locationSpan
 		this.content = content ?? null
 	}
-}
-
-export {
-	Token, TokenType
 }

@@ -14,7 +14,6 @@ export const allowedNodes = [
 ]
 
 
-
 export interface Node {
 	name: string
 	props: Property[]
@@ -29,60 +28,91 @@ export interface Property {
 export interface ContainerNode extends Node {
 	name: "container"
 	props: [
-		{ name: "color", value: number | null },
-		{ name: "spoiler", value: boolean }
+		{
+			name: "color"
+			value: number | null
+		},
+		{
+			name: "spoiler"
+			value: boolean
+		}
 	]
 }
 
 export interface SectionNode extends Node {
-	name: "section",
+	name: "section"
 	props: []
 }
 
 export interface SeparatorNode extends Node {
-	name: "separator",
+	name: "separator"
 	props: [
-		{ name: "spacing", value: "small" | "large" },
-		{ name: "divider", value: boolean }
-	],
+		{
+			name: "spacing"
+			value: "small" | "large"
+		},
+		{
+			name: "divider"
+			value: boolean
+		}
+	]
 	content?: never
 }
+
 // #endregion
 
 // #region Content
 export interface TextNode extends Node {
-	name: "text",
-	props: [],
+	name: "text"
+	props: []
 	content: string
 }
+
 // #endregion
 
 // #region Interactive
 export interface ButtonNode extends Node {
-	name: "button",
+	name: "button"
 	props: [
-		{ name: "id", value: string | null },
-		{ name: "style", value: "primary" | "secondary" | "danger" | "link" },
-		{ name: "disabled", value: boolean }
-	],
+		{
+			name: "id"
+			value: string | null
+		},
+		{
+			name: "style"
+			value: "primary" | "secondary" | "danger" | "link"
+		},
+		{
+			name: "disabled"
+			value: boolean
+		}
+	]
 	content: [ string, LinkNode?, EmojiNode? ]
 }
+
 // #endregion
 
 // #region Formatting
 export interface LinkNode extends Node {
-	name: "text",
+	name: "text"
 	props: [
-		{ name: "to", value: URL }
-	],
+		{
+			name: "to"
+			value: URL
+		}
+	]
 	content: string
 }
 
 export interface EmojiNode extends Node {
-	name: "emoji",
+	name: "emoji"
 	props: [
-		{ name: "id", value: Snowflake }
-	],
+		{
+			name: "id"
+			value: Snowflake
+		}
+	]
 	content: string
 }
+
 // #endregion

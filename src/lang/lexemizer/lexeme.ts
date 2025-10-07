@@ -5,7 +5,7 @@
 
 import type { LocationSpan } from "@disco/lang/location"
 
-enum LexemeType {
+export enum LexemeType {
 	Whitespace,
 	Special,
 	Word
@@ -16,7 +16,7 @@ const whitespaces = /\s/v
 // https://stackoverflow.com/a/30225759, because \w does not include diacritics
 const wordChars = /[\wÀ-ÖØ-öø-įĴ-őŔ-žǍ-ǰǴ-ǵǸ-țȞ-ȟȤ-ȳɃɆ-ɏḀ-ẞƀ-ƓƗ-ƚƝ-ơƤ-ƥƫ-ưƲ-ƶẠ-ỿ]/v // eslint-disable-line @stylistic/max-len
 
-class Lexeme {
+export class Lexeme {
 	readonly type: LexemeType
 	content: string
 	readonly locationSpan: LocationSpan
@@ -24,7 +24,7 @@ class Lexeme {
 	constructor ( type: LexemeType, char: string, location: LocationSpan ) {
 		this.type = type
 		this.content = char
-		this.locationSpan = structuredClone( location )
+		this.locationSpan = location.clone()
 	}
 
 	static typeFromChar ( char: string ): LexemeType {
@@ -42,9 +42,4 @@ class Lexeme {
 	static fromChar ( char: string, location: LocationSpan ): Lexeme {
 		return new Lexeme( this.typeFromChar( char ), char, location )
 	}
-}
-
-export {
-	Lexeme,
-	LexemeType
 }

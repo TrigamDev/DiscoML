@@ -4,7 +4,7 @@ const startingLine = 1
 const startingColumn = 1
 const startingOffset = 0
 
-class Location {
+export class Location {
 	line: number
 	column: number
 	offset: number
@@ -19,7 +19,11 @@ class Location {
 	}
 
 	clone (): Location {
-		return structuredClone( this )
+		return new Location(
+			this.line,
+			this.column,
+			this.offset
+		)
 	}
 
 	toString (): string {
@@ -40,7 +44,7 @@ interface LocationObject {
 	offset: number
 }
 
-class LocationSpan {
+export class LocationSpan {
 	start: Location
 	end: Location
 	constructor (
@@ -52,7 +56,10 @@ class LocationSpan {
 	}
 
 	clone (): LocationSpan {
-		return structuredClone( this )
+		return new LocationSpan(
+			this.start,
+			this.end
+		)
 	}
 
 	snapToEnd (): void {
@@ -93,8 +100,4 @@ class LocationSpan {
 interface LocationSpanObject {
 	start: LocationObject
 	end: LocationObject
-}
-
-export {
-	Location, LocationSpan
 }

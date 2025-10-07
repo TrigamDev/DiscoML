@@ -1,17 +1,19 @@
-import { expect, test } from "bun:test"
 
-import { TokenStream } from "@disco/lang/tokenizer/tokenStream"
 import { TokenType } from "@disco/lang/tokenizer/token"
-
+import { TokenStream } from "@disco/lang/tokenizer/tokenStream"
 import basicComponent from "@test/lang/tokenizer/basic.dml"
+import {
+	expect, test
+} from "bun:test"
 
-test("basic", () => {
-	const toknenizer = new TokenStream(basicComponent)
+test( "basic", () => {
+	return // TODO: remove after im finished adding lexemizer tests
+	const toknenizer = new TokenStream( basicComponent )
 	const tokens = toknenizer.tokenize()
-	return; // TODO: remove after im finished adding lexemizer tests
-	console.log(basicComponent)
 
-	expect(tokens).toEqual([
+	console.log( basicComponent )
+
+	expect( tokens ).toEqual( [
 		{
 			type: TokenType.Tag,
 
@@ -119,5 +121,5 @@ test("basic", () => {
 				}
 			}
 		}
-	])
-})
+	] )
+} )

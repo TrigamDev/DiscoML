@@ -4,9 +4,7 @@ import {
 } from "@lexemizer/lexeme"
 
 function lexemize ( source: string ): Lexeme[] {
-	if ( source.length === 0 ) {
-		return []
-	}
+	if ( source.length === 0 ) return []
 
 	let locationSpan: LocationSpan = new LocationSpan()
 	const lexemes: Lexeme[] = []
@@ -22,7 +20,7 @@ function lexemize ( source: string ): Lexeme[] {
 			|| Lexeme.typeFromChar( char ) !== current.type
 		) {
 			lexemes.push( current )
-			locationSpan = structuredClone( current.locationSpan )
+			locationSpan = current.locationSpan.clone()
 			locationSpan.snapToEnd()
 			current = Lexeme.fromChar( char, locationSpan )
 			current.locationSpan.forward( char )
@@ -38,7 +36,7 @@ function lexemize ( source: string ): Lexeme[] {
 	return lexemes
 }
 
-class LexemeStream {
+export class LexemeStream {
 	private lexemes: Lexeme[]
 	private lexemeIndex = 0
 
@@ -74,5 +72,3 @@ class LexemeStream {
 		return leftover
 	}
 }
-
-export { LexemeStream }
