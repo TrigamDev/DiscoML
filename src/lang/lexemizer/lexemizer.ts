@@ -13,7 +13,6 @@ function startSpanFromLexeme ( lexeme: Lexeme ): LocationSpan {
 export class Lexemizer {
 	private source: string
 	private lexemes: Lexeme[] = []
-	private span: LocationSpan = new LocationSpan()
 
 	constructor ( source: string ) {
 		this.source = source
