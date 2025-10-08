@@ -9,9 +9,15 @@ import {
 	comment,
 	commentMultiline,
 	commentXml,
+	curlyBraceClose,
+	curlyBraceOpen,
+	directiveContent,
+	directiveIndicator,
 	identifier,
 	nullLiteral,
 	numberLiteral,
+	parenthesesClose,
+	parenthesesOpen,
 	stringLiteral,
 	tagAttributeAssignment,
 	tagBracketClose, tagBracketOpen,
@@ -130,11 +136,16 @@ const StatePatternMap: Map<TokenizerState, Map<RegExp, TokenType>> = new Map( [
 ] )
 
 const TypePatternMap: Map<TokenType, RegExp> = new Map( [
+	// General
 	[ TokenType.Whitespace, whitespace ],
+
+	// Literals
 	[ TokenType.StringLiteral, stringLiteral ],
 	[ TokenType.NumberLiteral, numberLiteral ],
 	[ TokenType.BooleanLiteral, booleanLiteral ],
 	[ TokenType.NullLiteral, nullLiteral ],
+
+	// Tag Components
 	[ TokenType.TagBracketOpen, tagBracketOpen ],
 	[ TokenType.TagBracketClose, tagBracketClose ],
 	[ TokenType.TagClosingSlash, tagClosingSlash ],
@@ -142,6 +153,17 @@ const TypePatternMap: Map<TokenType, RegExp> = new Map( [
 	[ TokenType.TagIdentifier, identifier ],
 	[ TokenType.TagAttributeIdentifier, identifier ],
 	[ TokenType.TagAttributeAssignment, tagAttributeAssignment ],
+
+	// Directives
+	[ TokenType.DirectiveIndicator, directiveIndicator ],
+	[ TokenType.DirectiveIdentifier, identifier ],
+	[ TokenType.DirectiveContent, directiveContent ],
+	[ TokenType.ParenthesesOpen, parenthesesOpen ],
+	[ TokenType.ParenthesesClose, parenthesesClose ],
+	[ TokenType.CurlyBraceOpen, curlyBraceOpen ],
+	[ TokenType.CurlyBraceClose, curlyBraceClose ],
+
+	// Comments
 	[ TokenType.Comment, comment ],
 	[ TokenType.XmlComment, commentXml ],
 	[ TokenType.MultilineComment, commentMultiline ]

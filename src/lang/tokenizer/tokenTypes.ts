@@ -21,9 +21,10 @@ export enum TokenType {
 
 	// Directives
 	DirectiveIndicator,
+	DirectiveIdentifier,
+	DirectiveContent,
 	ParenthesesOpen,
 	ParenthesesClose,
-	DirectiveContent,
 	CurlyBraceOpen,
 	CurlyBraceClose,
 
@@ -32,6 +33,9 @@ export enum TokenType {
 	XmlComment,
 	MultilineComment
 }
+
+// General
+export const identifier = /^[\p{L}\p{N}\-_]+/v
 
 // Whitespace
 export const whitespace = /^\s+/v
@@ -48,15 +52,10 @@ export const nullLiteral = /^null/v
 export const tagBracketOpen = /^<(?![!])/v
 export const tagBracketClose = /^>/v
 export const tagClosingSlash = /^\//v
-export const identifier = /^[\p{L}\p{N}\-_]+/v
 export const tagAttributeAssignment = /^[=]/v
 
 // Directives
 export const directiveIndicator = /^@/v
-export const ifDirectiveIndicator = /^if/v
-export const elseIfDirectiveIndicator = /^else if/v
-export const elseDirectiveIndicator = /^else/v
-export const forEachDirectiveIndicator = /^for each/v
 export const directiveContent = /^(?:\((?<directive_content>.*)\))/v
 export const parenthesesOpen = /^\(/v
 export const parenthesesClose = /^\)/v
