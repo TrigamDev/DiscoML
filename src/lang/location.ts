@@ -79,7 +79,7 @@ export class LocationSpan {
 		this.end.forward( str )
 	}
 
-	between ( other: LocationSpan ): LocationSpan {
+	merge ( other: LocationSpan ): LocationSpan {
 		const start = this.start.offset > other.start.offset ? this.start : other.start
 		const end = this.end.offset > other.end.offset ? this.end : other.end
 

@@ -177,24 +177,65 @@ export class Tokenizer {
 	private isTokenizing: boolean = true
 
 	private tokens: Token[] = []
+	private streamIndex = 0
 
 	constructor ( source: string ) {
 		this.source = source
-	}
 
-	tokenize (): Token[] {
 		while ( this.isTokenizing ) {
-			const token: Token = this.getToken()
+			const token = this.getToken()
 			this.updateState( token.type )
 			this.tokens.push( token )
 			this.location.forward( token.content )
 			this.isTokenizing = this.location.offset < this.source.length
 		}
-
-		return this.tokens
 	}
 
-	getChar (): string {
+	nextToken (): Token | null {
+		const token = this.tokens[ this.streamIndex++ ]
+
+		if ( !token ) {
+			return null
+		}
+
+		if ( token.type !== TokenType.Text ) {
+			return token
+		}
+
+		/* Text tokens are individual characters for some reason
+		   everything below deals with merging them together */
+
+		const textTokens: Token[] = [ token ]
+		while ( this.tokens[ this.streamIndex ]?.type === TokenType.Text ) {
+			textTokens.push( this.tokens[ this.streamIndex++ ] )
+		}
+
+		let [ {
+			span, content
+		} ] = textTokens
+
+		for ( let textTokenIndex = 1; textTokenIndex < textTokens.length; textTokenIndex++ ) {
+			const textToken = textTokens[ textTokenIndex ]
+			span = span.merge( textToken.span )
+			content += textToken.content
+		}
+
+		return new Token( TokenType.Text, content, span )
+	}
+
+	drain (): Token[] {
+		const tokens: Token[] = []
+
+		let token = this.nextToken()
+		while ( token !== null ) {
+			tokens.push( token )
+			token = this.nextToken()
+		}
+
+		return tokens
+	}
+
+	private getChar (): string {
 		return this.source.substring(
 			this.location.offset,
 			// eslint-disable-next-line no-magic-numbers
@@ -202,11 +243,11 @@ export class Tokenizer {
 		)
 	}
 
-	test ( pattern: RegExp ): boolean {
+	private test ( pattern: RegExp ): boolean {
 		return pattern.test( this.source.substring( this.location.offset ) )
 	}
 
-	match ( pattern: RegExp ): RegExpMatchArray | null {
+	private match ( pattern: RegExp ): RegExpMatchArray | null {
 		const matches: RegExpMatchArray | null = this.source
 			.substring( this.location.offset )
 			.match( pattern )
@@ -214,7 +255,7 @@ export class Tokenizer {
 		return matches
 	}
 
-	getToken (): Token {
+	private getToken (): Token {
 		const tokenType: TokenType = this.getTokenType()
 
 		let tokenValue: string = this.getChar()
@@ -240,7 +281,7 @@ export class Tokenizer {
 		)
 	}
 
-	getTokenType (): TokenType {
+	private getTokenType (): TokenType {
 		const patternTypeMap = StatePatternMap.get( this.state )
 
 		if ( !patternTypeMap ) {
@@ -256,7 +297,7 @@ export class Tokenizer {
 		return TokenType.Text
 	}
 
-	updateState ( lastType: TokenType ): void {
+	private updateState ( lastType: TokenType ): void {
 		const state = StateTypeMap.get( this.state )?.get( lastType )
 
 		if ( state || state === 0 ) {

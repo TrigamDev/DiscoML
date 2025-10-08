@@ -3,9 +3,12 @@ import {
 	Location, LocationSpan
 } from "@disco/lang/location"
 import {
-	Token, TokenType
+	Token
 } from "@disco/lang/tokenizer/token"
 import { Tokenizer } from "@disco/lang/tokenizer/tokenizer"
+import {
+	TokenType
+} from "@disco/lang/tokenizer/tokenTypes"
 import { getDiscoSource } from "@disco/util"
 import basicComponent from "@test/components/basic.dml"
 import {
@@ -16,7 +19,7 @@ test( "Basic tokenization", () => {
 	const sourceText: string = getDiscoSource( basicComponent )
 	const tokenizer: Tokenizer = new Tokenizer( sourceText )
 
-	expect( tokenizer.tokenize() )
+	expect( tokenizer.drain() )
 		.toEqual(
 			[
 				new Token(
@@ -28,7 +31,7 @@ test( "Basic tokenization", () => {
 					)
 				),
 				new Token(
-					TokenType.Identifier,
+					TokenType.TagIdentifier,
 					"container",
 					new LocationSpan(
 						new Location( 1, 1, 1 ),
@@ -52,7 +55,7 @@ test( "Basic tokenization", () => {
 					)
 				),
 				new Token(
-					TokenType.Identifier,
+					TokenType.TagIdentifier,
 					"text",
 					new LocationSpan(
 						new Location( 2, 3, 15 ),
@@ -92,7 +95,7 @@ test( "Basic tokenization", () => {
 					)
 				),
 				new Token(
-					TokenType.Identifier,
+					TokenType.TagIdentifier,
 					"text",
 					new LocationSpan(
 						new Location( 2, 21, 33 ),
@@ -116,7 +119,7 @@ test( "Basic tokenization", () => {
 					)
 				),
 				new Token(
-					TokenType.Identifier,
+					TokenType.TagIdentifier,
 					"separator",
 					new LocationSpan(
 						new Location( 3, 3, 42 ),
@@ -156,7 +159,7 @@ test( "Basic tokenization", () => {
 					)
 				),
 				new Token(
-					TokenType.Identifier,
+					TokenType.TagIdentifier,
 					"container",
 					new LocationSpan(
 						new Location( 4, 3, 57 ),
