@@ -1,9 +1,14 @@
-import { Location } from "@disco/lang/location"
 import {
-	type Token,
+	Location, LocationSpan
+} from "@disco/lang/location"
+import {
+	Token,
 	TokenType
 } from "@tokenizer/token"
 import {
+	comment,
+	commentMultiline,
+	commentXml,
 	identifier,
 	tagAttributeAssignment,
 	tagBracketClose, tagBracketOpen,
@@ -48,58 +53,65 @@ export class Tokenizer {
 		let colored = ""
 		while ( this.isTokenizing ) {
 			const char: string = this.getChar()
-			const tokenType: TokenType = this.getTokenType()
-			this.updateState( tokenType )
+
+			const token: Token = this.getToken()
+			this.updateState( token.type )
 
 			// Color the chars for easy debugging
-			switch ( tokenType ) {
+			switch ( token.type ) {
 				case TokenType.TagBracketOpen: {
-					colored += chalk.gray( char )
+					colored += chalk.gray( token.content )
 					break
 				}
 				case TokenType.TagBracketClose: {
-					colored += chalk.gray( char )
+					colored += chalk.gray( token.content )
 					break
 				}
 				case TokenType.TagClosingSlash: {
-					colored += chalk.gray( char )
+					colored += chalk.gray( token.content )
 					break
 				}
 				case TokenType.TagSelfClosingSlash: {
-					colored += chalk.red( char )
+					colored += chalk.red( token.content )
 					break
 				}
 				case TokenType.TagAttributeAssignment: {
-					colored += chalk.green( char )
+					colored += chalk.green( token.content )
 					break
 				}
 				case TokenType.StringLiteral: {
-					colored += chalk.yellow( char )
+					colored += chalk.yellow( token.content )
 					break
 				}
 				case TokenType.Identifier: {
-					colored += chalk.blue( char )
+					colored += chalk.blue( token.content )
 					break
 				}
 				case TokenType.TagAttributeIdentifier: {
-					colored += chalk.cyan( char )
+					colored += chalk.cyan( token.content )
 					break
 				}
 				case TokenType.Whitespace: {
-					colored += chalk.bgGray( char )
+					colored += chalk.bgGray( token.content )
 					break
 				}
 				case TokenType.Text: {
-					colored += chalk.white( char )
+					colored += chalk.white( token.content )
+					break
+				}
+				case TokenType.Comment:
+				case TokenType.XmlComment:
+				case TokenType.MultilineComment: {
+					colored += chalk.green( token.content )
 					break
 				}
 				default: {
-					colored += chalk.black( char )
+					colored += chalk.gray( token.content )
 					break
 				}
 			}
 
-			this.location.forward( char )
+			this.location.forward( token.content )
 			this.isTokenizing = this.location.offset < this.source.length
 		}
 		console.log( colored )
@@ -119,20 +131,58 @@ export class Tokenizer {
 		return pattern.test( this.source.substring( this.location.offset ) )
 	}
 
-	match ( pattern: RegExp ): string | null {
+	match ( pattern: RegExp ): RegExpMatchArray | null {
 		const matches: RegExpMatchArray | null = this.source
 			.substring( this.location.offset )
 			.match( pattern )
 
-		if ( matches === null ) return null
-
-		return matches[ 0 ]
+		return matches
 	}
 
+	getToken (): Token {
+		const tokenType: TokenType = this.getTokenType()
+
+		let tokenValue: string = this.getChar()
+		switch ( tokenType ) {
+			case TokenType.Comment: {
+				const match = this.match( comment )
+				if ( match && match[ 0 ] ) [ tokenValue ] = match
+				break
+			}
+			case TokenType.XmlComment: {
+				const match = this.match( commentXml )
+				if ( match && match[ 0 ] ) [ tokenValue ] = match
+				break
+			}
+			case TokenType.MultilineComment: {
+				const match = this.match( commentMultiline )
+				if ( match && match[ 0 ] ) [ tokenValue ] = match
+				break
+			}
+			default: { break }
+		}
+
+		const tokenEnd: Location = this.location.clone()
+		tokenEnd.forward( tokenValue )
+
+		return new Token(
+			tokenType,
+			tokenValue,
+			new LocationSpan(
+				this.location.clone(),
+				tokenEnd
+			)
+		)
+	}
+
+	// eslint-disable-next-line complexity
 	getTokenType (): TokenType {
 		switch ( this.state ) {
 			case TokenizerState.Body: {
 				if ( this.test( tagBracketOpen ) ) return TokenType.TagBracketOpen
+				if ( this.test( comment ) ) return TokenType.Comment
+				if ( this.test( commentXml ) ) return TokenType.XmlComment
+				if ( this.test( commentMultiline ) ) return TokenType.MultilineComment
 				break
 			}
 			case TokenizerState.TagOpen: {

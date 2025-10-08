@@ -34,10 +34,8 @@ export enum TokenType {
 
 	// Comments
 	Comment,
-	XmlCommentStart,
-	XmlCommentEnd,
-	MultilineCommentStart,
-	MultilineCommentEnd
+	XmlComment,
+	MultilineComment
 }
 
 export class Token {
