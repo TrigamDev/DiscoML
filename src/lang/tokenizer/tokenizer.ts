@@ -24,6 +24,7 @@ import {
 	whitespace
 } from "@tokenizer/tokenTypes"
 
+/* eslint-disable no-unused-vars */
 enum TokenizerState {
 	// General
 	Body,
@@ -45,6 +46,7 @@ enum TokenizerState {
 	// Directives
 	Directive
 }
+/* eslint-enable no-unused-vars */
 
 const StateTypeMap: Map<TokenizerState, Map<TokenType, TokenizerState>> = new Map( [
 	[ TokenizerState.Body, new Map<TokenType, TokenizerState>( [
