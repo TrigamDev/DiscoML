@@ -17,6 +17,7 @@ export const equals = /^[=]/v
 // Directives
 export const directiveIndicator = /@/v
 export const directiveIfIndicator = /@if/v
+export const directiveElseIfIndicator = /@else if/v
 export const directiveElseIndicator = /@else/v
 export const directiveForeachIndicator = /@foreach/v
 export const directiveContent = /(?:\((?<directive_content>.*)\))/v
