@@ -1,3 +1,38 @@
+/* eslint-disable no-unused-vars */
+export enum TokenType {
+	// General
+	Whitespace,
+	Text,
+
+	// Literals
+	StringLiteral,
+	NumberLiteral,
+	BooleanLiteral,
+	NullLiteral,
+
+	// Tag Components
+	TagBracketOpen,
+	TagBracketClose,
+	TagClosingSlash,
+	TagSelfClosingSlash,
+	TagIdentifier,
+	TagAttributeIdentifier,
+	TagAttributeAssignment,
+
+	// Directives
+	DirectiveIndicator,
+	ParenthesesOpen,
+	ParenthesesClose,
+	DirectiveContent,
+	CurlyBraceOpen,
+	CurlyBraceClose,
+
+	// Comments
+	Comment,
+	XmlComment,
+	MultilineComment
+}
+
 // Whitespace
 export const whitespace = /^\s+/v
 export const carriageReturn = /^\r/v
@@ -5,7 +40,7 @@ export const lineFeed = /^\n/v
 
 // Literals
 export const stringLiteral = /^"(?:[^"\\]|\\.)*"/v
-export const numericLiteral = /^[\-]*\p{N}+(?:\.\p{N}+)?(?:[eE][+\-]?\p{N}+)?/v
+export const numberLiteral = /^[\-]*\p{N}+(?:\.\p{N}+)?(?:[eE][+\-]?\p{N}+)?/v
 export const booleanLiteral = /^true|false/v
 export const nullLiteral = /^null/v
 
@@ -23,6 +58,10 @@ export const elseIfDirectiveIndicator = /^else if/v
 export const elseDirectiveIndicator = /^else/v
 export const forEachDirectiveIndicator = /^for each/v
 export const directiveContent = /^(?:\((?<directive_content>.*)\))/v
+export const parenthesesOpen = /^\(/v
+export const parenthesesClose = /^\)/v
+export const curlyBraceOpen = /^\{/v
+export const curlyBraceClose = /^\}/v
 
 // Comments
 export const comment = /^\/\/(?<comment_content>.*)/v

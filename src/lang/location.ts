@@ -1,6 +1,6 @@
 import {
 	carriageReturn, lineFeed
-} from "@tokenizer/tokenPatterns"
+} from "@tokenizer/tokenTypes"
 
 const startingLine = 1
 const startingColumn = 1

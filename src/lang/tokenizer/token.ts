@@ -1,42 +1,8 @@
+import { TokenType } from "@tokenizer/tokenTypes"
 import chalk from "chalk"
 import type {
 	LocationSpan, LocationSpanObject
 } from "@disco/lang/location"
-
-/* eslint-disable no-unused-vars */
-export enum TokenType {
-	// General
-	Whitespace,
-	Text,
-
-	// Literals
-	StringLiteral,
-	NumberLiteral,
-	BooleanLiteral,
-	NullLiteral,
-
-	// Tag Components
-	TagBracketOpen,
-	TagBracketClose,
-	TagClosingSlash,
-	TagSelfClosingSlash,
-	TagIdentifier,
-	TagAttributeIdentifier,
-	TagAttributeAssignment,
-
-	// Directives
-	DirectiveIndicator,
-	ParenthesesOpen,
-	ParenthesesClose,
-	DirectiveContent,
-	CurlyBraceOpen,
-	CurlyBraceClose,
-
-	// Comments
-	Comment,
-	XmlComment,
-	MultilineComment
-}
 
 export class Token {
 	readonly type: TokenType

@@ -1,8 +1,8 @@
 import {
-	type Token, type TokenObject,
-	TokenType
+	type Token, type TokenObject
 } from "@disco/lang/tokenizer/token"
 import { Tokenizer } from "@disco/lang/tokenizer/tokenizer"
+import { TokenType } from "@disco/lang/tokenizer/tokenTypes"
 import { getDiscoSource } from "@disco/util"
 import testComponent from "@test/components/featured.dml"
 
