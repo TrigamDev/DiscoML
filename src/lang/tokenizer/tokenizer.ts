@@ -1,3 +1,4 @@
+import { DmlParseError } from "@disco/error"
 import {
 	Location, LocationSpan
 } from "@disco/lang/location"
@@ -37,6 +38,41 @@ enum TokenizerState {
 	TagAttributeValue
 }
 
+const StateTypeMap: Map<TokenizerState, Map<TokenType, TokenizerState>> = new Map();
+
+StateTypeMap.set(TokenizerState.Body, new Map([
+	[TokenType.TagBracketOpen, TokenizerState.TagOpen]
+]));
+
+StateTypeMap.set(TokenizerState.TagOpen, new Map([
+	[TokenType.TagBracketClose, TokenizerState.Body],
+	[TokenType.Whitespace, TokenizerState.TagMiddle]
+]));
+
+StateTypeMap.set(TokenizerState.TagMiddle, new Map([
+	[TokenType.TagBracketClose, TokenizerState.TagClose],
+	[TokenType.TagSelfClosingSlash, TokenizerState.TagClose],
+	[TokenType.TagAttributeIdentifier, TokenizerState.TagAttributeName]
+]));
+
+StateTypeMap.set(TokenizerState.TagClose, new Map([
+	[TokenType.TagBracketClose, TokenizerState.Body]
+]));
+
+StateTypeMap.set(TokenizerState.TagAttributeName, new Map([
+	[TokenType.TagAttributeAssignment, TokenizerState.TagAttributeAssignment]
+]));
+
+StateTypeMap.set(TokenizerState.TagAttributeAssignment, new Map([
+	[TokenType.StringLiteral, TokenizerState.TagAttributeValue]
+]));
+
+StateTypeMap.set(TokenizerState.TagAttributeValue, new Map([
+	[TokenType.TagBracketClose, TokenizerState.Body],
+	[TokenType.TagSelfClosingSlash, TokenizerState.TagClose],
+	[TokenType.Whitespace, TokenizerState.TagMiddle]
+]));
+
 export class Tokenizer {
 	private source: string
 	private location: Location = new Location()
@@ -46,81 +82,81 @@ export class Tokenizer {
 
 	private tokens: Token[] = []
 
-	constructor ( source: string ) {
+	constructor(source: string) {
 		this.source = source
 	}
 
-	tokenize (): Token[] {
+	tokenize(): Token[] {
 		let colored = ""
-		while ( this.isTokenizing ) {
+		while (this.isTokenizing) {
 			const token: Token = this.getToken()
-			this.updateState( token.type )
+			this.updateState(token.type)
 
 			// Color the chars for easy debugging
-			switch ( token.type ) {
+			switch (token.type) {
 				case TokenType.TagBracketOpen: {
-					colored += chalk.gray( token.content )
+					colored += chalk.gray(token.content)
 					break
 				}
 				case TokenType.TagBracketClose: {
-					colored += chalk.gray( token.content )
+					colored += chalk.gray(token.content)
 					break
 				}
 				case TokenType.TagClosingSlash: {
-					colored += chalk.gray( token.content )
+					colored += chalk.gray(token.content)
 					break
 				}
 				case TokenType.TagSelfClosingSlash: {
-					colored += chalk.red( token.content )
+					colored += chalk.red(token.content)
 					break
 				}
 				case TokenType.TagAttributeAssignment: {
-					colored += chalk.green( token.content )
+					colored += chalk.green(token.content)
 					break
 				}
 				case TokenType.StringLiteral: {
-					colored += chalk.yellow( token.content )
+					colored += chalk.yellow(token.content)
 					break
 				}
 				case TokenType.TagIdentifier: {
-					colored += chalk.blue( token.content )
+					colored += chalk.blue(token.content)
 					break
 				}
 				case TokenType.TagAttributeIdentifier: {
-					colored += chalk.cyan( token.content )
+					colored += chalk.cyan(token.content)
 					break
 				}
 				case TokenType.Whitespace: {
-					colored += chalk.bgGray( token.content )
+					colored += chalk.bgGray(token.content)
 					break
 				}
 				case TokenType.Text: {
-					colored += chalk.white( token.content )
+					colored += chalk.white(token.content)
 					break
 				}
 				case TokenType.Comment:
 				case TokenType.XmlComment:
 				case TokenType.MultilineComment: {
-					colored += chalk.green( token.content )
+					colored += chalk.green(token.content)
 					break
 				}
 				default: {
-					colored += chalk.gray( token.content )
+					colored += chalk.gray(token.content)
 					break
 				}
 			}
 
-			this.tokens.push( token )
+			this.tokens.push(token)
 
-			this.location.forward( token.content )
+			this.location.forward(token.content)
 			this.isTokenizing = this.location.offset < this.source.length
 		}
-		console.log( colored )
+		console.log(colored)
 
 		return this.tokens
 	}
 
-	getChar (): string {
+	getChar(): string {
 		return this.source.substring(
 			this.location.offset,
 			// eslint-disable-next-line no-magic-numbers
@@ -128,24 +164,24 @@ export class Tokenizer {
 		)
 	}
 
-	test ( pattern: RegExp ): boolean {
-		return pattern.test( this.source.substring( this.location.offset ) )
+	test(pattern: RegExp): boolean {
+		return pattern.test(this.source.substring(this.location.offset))
 	}
 
-	match ( pattern: RegExp ): RegExpMatchArray | null {
+	match(pattern: RegExp): RegExpMatchArray | null {
 		const matches: RegExpMatchArray | null = this.source
-			.substring( this.location.offset )
-			.match( pattern )
+			.substring(this.location.offset)
+			.match(pattern)
 
 		return matches
 	}
 
-	getToken (): Token {
+	getToken(): Token {
 		const tokenType: TokenType = this.getTokenType()
 
 		let tokenValue: string = this.getChar()
 		let tokenPattern: RegExp | null = null
-		switch ( tokenType ) {
+		switch (tokenType) {
 			case TokenType.TagIdentifier:
 			case TokenType.TagAttributeIdentifier: {
 				tokenPattern = identifier
@@ -174,13 +210,13 @@ export class Tokenizer {
 			default: { break }
 		}
 
-		if ( tokenPattern ) {
-			const match = this.match( tokenPattern )
-			if ( match && match[ 0 ] ) [ tokenValue ] = match
+		if (tokenPattern) {
+			const match = this.match(tokenPattern)
+			if (match && match[0]) [tokenValue] = match
 		}
 
 		const tokenEnd: Location = this.location.clone()
-		tokenEnd.forward( tokenValue )
+		tokenEnd.forward(tokenValue)
 
 		return new Token(
 			tokenType,
@@ -193,50 +229,50 @@ export class Tokenizer {
 	}
 
 	// eslint-disable-next-line complexity
-	getTokenType (): TokenType {
-		switch ( this.state ) {
+	getTokenType(): TokenType {
+		switch (this.state) {
 			case TokenizerState.Body: {
-				if ( this.test( tagBracketOpen ) ) return TokenType.TagBracketOpen
-				if ( this.test( comment ) ) return TokenType.Comment
-				if ( this.test( commentXml ) ) return TokenType.XmlComment
-				if ( this.test( commentMultiline ) ) return TokenType.MultilineComment
+				if (this.test(tagBracketOpen)) return TokenType.TagBracketOpen
+				if (this.test(comment)) return TokenType.Comment
+				if (this.test(commentXml)) return TokenType.XmlComment
+				if (this.test(commentMultiline)) return TokenType.MultilineComment
 				break
 			}
 			case TokenizerState.TagOpen: {
-				if ( this.test( tagClosingSlash ) ) return TokenType.TagClosingSlash
-				if ( this.test( tagBracketClose ) ) return TokenType.TagBracketClose
-				if ( this.test( whitespace ) ) return TokenType.Whitespace
-				if ( this.test( identifier ) ) return TokenType.TagIdentifier
+				if (this.test(tagClosingSlash)) return TokenType.TagClosingSlash
+				if (this.test(tagBracketClose)) return TokenType.TagBracketClose
+				if (this.test(whitespace)) return TokenType.Whitespace
+				if (this.test(identifier)) return TokenType.TagIdentifier
 				break
 			}
 			case TokenizerState.TagMiddle: {
-				if ( this.test( tagClosingSlash ) ) return TokenType.TagSelfClosingSlash
-				if ( this.test( whitespace ) ) return TokenType.Whitespace
-				if ( this.test( identifier ) ) return TokenType.TagAttributeIdentifier
+				if (this.test(tagClosingSlash)) return TokenType.TagSelfClosingSlash
+				if (this.test(whitespace)) return TokenType.Whitespace
+				if (this.test(identifier)) return TokenType.TagAttributeIdentifier
 				break
 			}
 			case TokenizerState.TagClose: {
-				if ( this.test( tagBracketClose ) ) return TokenType.TagBracketClose
+				if (this.test(tagBracketClose)) return TokenType.TagBracketClose
 				break
 			}
 			case TokenizerState.TagAttributeName: {
-				if ( this.test( tagAttributeAssignment ) ) return TokenType.TagAttributeAssignment
-				if ( this.test( whitespace ) ) return TokenType.Whitespace
-				if ( this.test( identifier ) ) return TokenType.TagAttributeIdentifier
+				if (this.test(tagAttributeAssignment)) return TokenType.TagAttributeAssignment
+				if (this.test(whitespace)) return TokenType.Whitespace
+				if (this.test(identifier)) return TokenType.TagAttributeIdentifier
 				break
 			}
 			case TokenizerState.TagAttributeAssignment: {
-				if ( this.test( whitespace ) ) return TokenType.Whitespace
+				if (this.test(whitespace)) return TokenType.Whitespace
 
 				return TokenType.StringLiteral
 			}
 			case TokenizerState.TagAttributeValue: {
-				if ( this.test( tagClosingSlash ) ) return TokenType.TagClosingSlash
-				if ( this.test( tagBracketClose ) ) return TokenType.TagBracketClose
-				if ( this.test( whitespace ) ) return TokenType.Whitespace
+				if (this.test(tagClosingSlash)) return TokenType.TagClosingSlash
+				if (this.test(tagBracketClose)) return TokenType.TagBracketClose
+				if (this.test(whitespace)) return TokenType.Whitespace
 
 				// Literals
-				if ( this.test( identifier ) ) return TokenType.StringLiteral
+				if (this.test(identifier)) return TokenType.StringLiteral
 				break
 			}
 			default: { break }
@@ -245,98 +281,13 @@ export class Tokenizer {
 		return TokenType.Text
 	}
 
-	updateState ( lastType: TokenType ): void {
-		switch ( this.state ) {
-			case TokenizerState.Body: {
-				switch ( lastType ) {
-					case TokenType.TagBracketOpen: {
-						this.state = TokenizerState.TagOpen
-						break
-					}
-					default: { break }
-				}
-				break
-			}
-			case TokenizerState.TagOpen: {
-				switch ( lastType ) {
-					case TokenType.TagBracketClose: {
-						this.state = TokenizerState.Body
-						break
-					}
-					case TokenType.Whitespace: {
-						this.state = TokenizerState.TagMiddle
-						break
-					}
-					default: { break }
-				}
-				break
-			}
-			case TokenizerState.TagMiddle: {
-				switch ( lastType ) {
-					case TokenType.TagBracketClose:
-					case TokenType.TagSelfClosingSlash: {
-						this.state = TokenizerState.TagClose
-						break
-					}
-					case TokenType.TagAttributeIdentifier: {
-						this.state = TokenizerState.TagAttributeName
-						break
-					}
-					default: { break }
-				}
-				break
-			}
-			case TokenizerState.TagClose: {
-				switch ( lastType ) {
-					case TokenType.TagBracketClose: {
-						this.state = TokenizerState.Body
-						break
-					}
-					default: { break }
-				}
-				break
-			}
-			case TokenizerState.TagAttributeName: {
-				switch ( lastType ) {
-					case TokenType.TagAttributeAssignment: {
-						this.state = TokenizerState.TagAttributeAssignment
-						break
-					}
-					default: { break }
-				}
-				break
-			}
-			case TokenizerState.TagAttributeAssignment: {
-				switch ( lastType ) {
-					case TokenType.StringLiteral: {
-						this.state = TokenizerState.TagAttributeValue
-						break
-					}
-					default: { break }
-				}
-				break
-			}
-			case TokenizerState.TagAttributeValue: {
-				switch ( lastType ) {
-					case TokenType.TagBracketClose: {
-						this.state = TokenizerState.Body
-						break
-					}
-					case TokenType.TagSelfClosingSlash: {
-						this.state = TokenizerState.TagClose
-						break
-					}
-					case TokenType.Whitespace: {
-						this.state = TokenizerState.TagMiddle
-						break
-					}
-					default: { break }
-				}
-				break
-			}
+	updateState(lastType: TokenType): void {
+		const state = StateTypeMap.get(this.state)?.get(lastType);
 
-
-			default: { break }
+		if (!state) {
+			throw new DmlParseError(`Invalid State and Type combo: ${this.state} ${lastType}`);
 		}
+
+		this.state = state;
 	}
 }
