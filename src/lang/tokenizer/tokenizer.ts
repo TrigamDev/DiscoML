@@ -1,4 +1,3 @@
-import { DmlParseError } from "@disco/error"
 import {
 	Location, LocationSpan
 } from "@disco/lang/location"
