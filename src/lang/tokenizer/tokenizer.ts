@@ -246,7 +246,7 @@ export class Tokenizer {
 			}
 
 			/*
-			   Tokenizer state: Tag attribute name
+			   Tag attribute name
 			*/
 			case TokenizerState.TagAttributeName: {
 				switch ( lastType ) {
@@ -260,7 +260,7 @@ export class Tokenizer {
 			}
 
 			/*
-			   Tokenizer state: Tag attribute assignment
+			   Tag attribute assignment
 			*/
 			case TokenizerState.TagAttributeAssignment: {
 				switch ( lastType ) {
@@ -274,7 +274,7 @@ export class Tokenizer {
 			}
 
 			/*
-			   Tokenizer state: Tag attribute value
+			   Tag attribute value
 			*/
 			case TokenizerState.TagAttributeValue: {
 				switch ( lastType ) {
