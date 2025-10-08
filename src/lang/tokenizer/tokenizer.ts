@@ -75,19 +75,6 @@ const StateTypeMap: Map<TokenizerState, Map<TokenType, TokenizerState>> = new Ma
 	] ) ]
 ] )
 
-const TypePatternMap: Map<TokenType, RegExp> = new Map( [
-	[ TokenType.TagIdentifier, identifier ],
-	[ TokenType.TagAttributeIdentifier, identifier ],
-	[ TokenType.StringLiteral, stringLiteral ],
-	[ TokenType.NumberLiteral, numberLiteral ],
-	[ TokenType.BooleanLiteral, booleanLiteral ],
-	[ TokenType.NullLiteral, nullLiteral ],
-	[ TokenType.Whitespace, whitespace ],
-	[ TokenType.Comment, comment ],
-	[ TokenType.XmlComment, commentXml ],
-	[ TokenType.MultilineComment, commentMultiline ]
-] )
-
 const StatePatternMap: Map<TokenizerState, Map<RegExp, TokenType>> = new Map( [
 	[ TokenizerState.Body, new Map<RegExp, TokenType>( [
 		[ tagBracketOpen, TokenType.TagBracketOpen ],
@@ -136,6 +123,19 @@ const StatePatternMap: Map<TokenizerState, Map<RegExp, TokenType>> = new Map( [
 		[ nullLiteral, TokenType.NullLiteral ]
 	]
 	) ]
+] )
+
+const TypePatternMap: Map<TokenType, RegExp> = new Map( [
+	[ TokenType.TagIdentifier, identifier ],
+	[ TokenType.TagAttributeIdentifier, identifier ],
+	[ TokenType.StringLiteral, stringLiteral ],
+	[ TokenType.NumberLiteral, numberLiteral ],
+	[ TokenType.BooleanLiteral, booleanLiteral ],
+	[ TokenType.NullLiteral, nullLiteral ],
+	[ TokenType.Whitespace, whitespace ],
+	[ TokenType.Comment, comment ],
+	[ TokenType.XmlComment, commentXml ],
+	[ TokenType.MultilineComment, commentMultiline ]
 ] )
 
 export class Tokenizer {
