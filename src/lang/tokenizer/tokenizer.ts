@@ -252,7 +252,10 @@ export class Tokenizer {
 		const state = StateTypeMap.get( this.state )?.get( lastType )
 
 		if ( !state ) {
-			throw new DmlParseError( `Invalid State and Type combo: ${ this.state } ${ lastType }` )
+			throw new DmlParseError(
+				"Invalid State and Type combo: "
+				+ `${ TokenizerState[ this.state ] } - ${ TokenType[ lastType ] }`
+			)
 		}
 
 		this.state = state
