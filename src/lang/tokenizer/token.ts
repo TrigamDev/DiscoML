@@ -25,12 +25,9 @@ export enum TokenType {
 
 	// Directives
 	DirectiveIndicator,
-	IfDirective,
-	ElseIfDirective,
-	ElseDirective,
-	ForEachDirective,
 	ParenthesesOpen,
 	ParenthesesClose,
+	DirectiveContent,
 	CurlyBraceOpen,
 	CurlyBraceClose,
 
