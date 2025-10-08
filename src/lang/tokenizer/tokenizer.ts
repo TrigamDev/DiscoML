@@ -76,10 +76,6 @@ const StateTypeMap: Map<TokenizerState, Map<TokenType, TokenizerState>> = new Ma
 ] )
 
 const TypePatternMap: Map<TokenType, RegExp> = new Map( [
-	[ TokenType.TagBracketOpen, tagBracketOpen ],
-	[ TokenType.TagBracketClose, tagBracketClose ],
-	[ TokenType.TagClosingSlash, tagClosingSlash ],
-	[ TokenType.TagSelfClosingSlash, tagClosingSlash ],
 	[ TokenType.TagIdentifier, identifier ],
 	[ TokenType.TagAttributeIdentifier, identifier ],
 	[ TokenType.StringLiteral, stringLiteral ],
