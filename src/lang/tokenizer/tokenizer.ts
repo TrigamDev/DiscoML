@@ -8,6 +8,7 @@ import {
 	tagBracketClose, tagBracketOpen,
 	TagClosingSlash
 } from "@tokenizer/tokenPatterns"
+import chalk from "chalk"
 
 enum TokenizerState {
 	Body,
@@ -28,16 +29,40 @@ export class Tokenizer {
 	}
 
 	tokenize (): Token[] {
+		let colored = ""
 		while ( this.isTokenizing ) {
 			const char: string = this.getChar()
 			const tokenType: TokenType = this.getTokenType()
 			this.updateState( tokenType )
 
-			console.log( `${ char }: ${ TokenType[ tokenType ] }` )
+			// Color the chars for easy debugging
+			switch ( tokenType ) {
+				case TokenType.TagBracketOpen: {
+					colored += chalk.gray( char )
+					break
+				}
+				case TokenType.TagBracketClose: {
+					colored += chalk.black( char )
+					break
+				}
+				case TokenType.TagClosingSlash: {
+					colored += chalk.red( char )
+					break
+				}
+				case TokenType.Identifier: {
+					colored += chalk.blue( char )
+					break
+				}
+				default: {
+					colored += char
+					break
+				}
+			}
 
 			this.location.forward( char )
 			this.isTokenizing = this.location.offset < this.source.length
 		}
+		console.log( colored )
 
 		return this.tokens
 	}

@@ -661,6 +661,9 @@ export default defineConfig( [
 					"microutilities",
 					"native",
 					"preferred"
+				],
+				allowed: [
+					"chalk"
 				]
 			} ],
 			"@import/no-deprecated": "error",
