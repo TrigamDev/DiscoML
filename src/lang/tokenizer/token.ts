@@ -2,19 +2,24 @@ import type { LocationSpan } from "@disco/lang/location"
 
 /* eslint-disable no-unused-vars */
 export enum TokenType {
-	// Literals
+	// General
+	Whitespace,
 	Text,
+
+	// Literals
 	Identifier,
-	String,
-	Number,
-	Boolean,
-	Null,
+	StringLiteral,
+	NumberLiteral,
+	BooleanLiteral,
+	NullLiteral,
 
 	// Tag Components
 	TagBracketOpen,
 	TagBracketClose,
 	TagClosingSlash,
-	TagAttributeEquals,
+	TagSelfClosingSlash,
+	TagAttributeIdentifier,
+	TagAttributeAssignment,
 
 	// Directives
 	DirectiveIndicator,
