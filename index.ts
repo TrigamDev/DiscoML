@@ -8,7 +8,7 @@ import testComponent from "@test/components/featured.dml"
 
 const testSource: string = getDiscoSource( testComponent )
 const toknenizer = new Tokenizer( testSource )
-const tokens = toknenizer.tokenize()
+const tokens = toknenizer.drain()
 
 console.log(
 	tokens.map( ( token: Token ) => {

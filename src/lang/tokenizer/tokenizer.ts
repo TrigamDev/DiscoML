@@ -198,9 +198,12 @@ export class Tokenizer {
 		this.source = source
 
 		while ( this.isTokenizing ) {
+			// Get token and handle
 			const token = this.getToken()
 			this.updateState( token.type )
 			this.tokens.push( token )
+
+			// Push on forward
 			this.location.forward( token.content )
 			this.isTokenizing = this.location.offset < this.source.length
 		}

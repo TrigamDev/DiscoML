@@ -34,7 +34,7 @@ test( "Basic tokenization", () => {
 					TokenType.TagIdentifier,
 					"container",
 					new LocationSpan(
-						new Location( 1, 1, 1 ),
+						new Location( 1, 2, 1 ),
 						new Location( 1, 11, 10 )
 					)
 				),
@@ -44,6 +44,14 @@ test( "Basic tokenization", () => {
 					new LocationSpan(
 						new Location( 1, 11, 10 ),
 						new Location( 1, 12, 11 )
+					)
+				),
+				new Token(
+					TokenType.Text,
+					"\r\n\t",
+					new LocationSpan(
+						new Location( 1, 12, 11 ),
+						new Location( 2, 2, 14 )
 					)
 				),
 				new Token(
@@ -111,6 +119,14 @@ test( "Basic tokenization", () => {
 					)
 				),
 				new Token(
+					TokenType.Text,
+					"\r\n\t",
+					new LocationSpan(
+						new Location( 2, 26, 38 ),
+						new Location( 3, 3, 42 )
+					)
+				),
+				new Token(
 					TokenType.TagBracketOpen,
 					"<",
 					new LocationSpan(
@@ -140,6 +156,14 @@ test( "Basic tokenization", () => {
 					new LocationSpan(
 						new Location( 3, 13, 52 ),
 						new Location( 3, 14, 53 )
+					)
+				),
+				new Token(
+					TokenType.Text,
+					"\r\n",
+					new LocationSpan(
+						new Location( 3, 14, 53 ),
+						new Location( 4, 1, 55 )
 					)
 				),
 				new Token(
