@@ -22,3 +22,7 @@ console.log(
 		}
 	} )
 )
+
+console.log(
+	tokens.map( ( token: Token ) => token.toString() ).join( "" )
+)

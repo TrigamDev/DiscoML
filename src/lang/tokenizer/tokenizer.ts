@@ -6,10 +6,13 @@ import {
 	TokenType
 } from "@tokenizer/token"
 import {
+	booleanLiteral,
 	comment,
 	commentMultiline,
 	commentXml,
 	identifier,
+	nullLiteral,
+	numericLiteral,
 	stringLiteral,
 	tagAttributeAssignment,
 	tagBracketClose, tagBracketOpen,
@@ -51,71 +54,15 @@ export class Tokenizer {
 	}
 
 	tokenize (): Token[] {
-		let colored = ""
 		while ( this.isTokenizing ) {
 			const token: Token = this.getToken()
 			this.updateState( token.type )
-
-			// Color the chars for easy debugging
-			switch ( token.type ) {
-				case TokenType.TagBracketOpen: {
-					colored += chalk.gray( token.content )
-					break
-				}
-				case TokenType.TagBracketClose: {
-					colored += chalk.gray( token.content )
-					break
-				}
-				case TokenType.TagClosingSlash: {
-					colored += chalk.gray( token.content )
-					break
-				}
-				case TokenType.TagSelfClosingSlash: {
-					colored += chalk.red( token.content )
-					break
-				}
-				case TokenType.TagAttributeAssignment: {
-					colored += chalk.green( token.content )
-					break
-				}
-				case TokenType.StringLiteral: {
-					colored += chalk.yellow( token.content )
-					break
-				}
-				case TokenType.TagIdentifier: {
-					colored += chalk.blue( token.content )
-					break
-				}
-				case TokenType.TagAttributeIdentifier: {
-					colored += chalk.cyan( token.content )
-					break
-				}
-				case TokenType.Whitespace: {
-					colored += chalk.bgGray( token.content )
-					break
-				}
-				case TokenType.Text: {
-					colored += chalk.white( token.content )
-					break
-				}
-				case TokenType.Comment:
-				case TokenType.XmlComment:
-				case TokenType.MultilineComment: {
-					colored += chalk.green( token.content )
-					break
-				}
-				default: {
-					colored += chalk.gray( token.content )
-					break
-				}
-			}
 
 			this.tokens.push( token )
 
 			this.location.forward( token.content )
 			this.isTokenizing = this.location.offset < this.source.length
 		}
-		console.log( colored )
 
 		return this.tokens
 	}
@@ -153,6 +100,18 @@ export class Tokenizer {
 			}
 			case TokenType.StringLiteral: {
 				tokenPattern = stringLiteral
+				break
+			}
+			case TokenType.NumberLiteral: {
+				tokenPattern = numericLiteral
+				break
+			}
+			case TokenType.BooleanLiteral: {
+				tokenPattern = booleanLiteral
+				break
+			}
+			case TokenType.NullLiteral: {
+				tokenPattern = nullLiteral
 				break
 			}
 			case TokenType.Whitespace: {
@@ -228,7 +187,12 @@ export class Tokenizer {
 			case TokenizerState.TagAttributeAssignment: {
 				if ( this.test( whitespace ) ) return TokenType.Whitespace
 
-				return TokenType.StringLiteral
+				// Literals
+				if ( this.test( stringLiteral ) ) return TokenType.StringLiteral
+				if ( this.test( numericLiteral ) ) return TokenType.NumberLiteral
+				if ( this.test( booleanLiteral ) ) return TokenType.BooleanLiteral
+				if ( this.test( nullLiteral ) ) return TokenType.NullLiteral
+				break
 			}
 			case TokenizerState.TagAttributeValue: {
 				if ( this.test( tagClosingSlash ) ) return TokenType.TagClosingSlash
@@ -236,7 +200,10 @@ export class Tokenizer {
 				if ( this.test( whitespace ) ) return TokenType.Whitespace
 
 				// Literals
-				if ( this.test( identifier ) ) return TokenType.StringLiteral
+				if ( this.test( stringLiteral ) ) return TokenType.StringLiteral
+				if ( this.test( numericLiteral ) ) return TokenType.NumberLiteral
+				if ( this.test( booleanLiteral ) ) return TokenType.BooleanLiteral
+				if ( this.test( nullLiteral ) ) return TokenType.NullLiteral
 				break
 			}
 			default: { break }
@@ -308,7 +275,10 @@ export class Tokenizer {
 			}
 			case TokenizerState.TagAttributeAssignment: {
 				switch ( lastType ) {
-					case TokenType.StringLiteral: {
+					case TokenType.StringLiteral:
+					case TokenType.NumberLiteral:
+					case TokenType.BooleanLiteral:
+					case TokenType.NullLiteral: {
 						this.state = TokenizerState.TagAttributeValue
 						break
 					}

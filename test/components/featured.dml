@@ -4,7 +4,7 @@
 		info about the bot!
 	*/
 	<section>
-		<header level = "1">@( bot.name )</header>
+		<header level = 1>@( bot.name )</header>
 		<text>Wow! This is a cool bot!</text>
 
 		<accessory>
@@ -20,12 +20,12 @@
 		</accessory>
 	</section>
 
-	<separator spacing="small" divider="true" />
+	<separator spacing="small" divider=true />
 
 	// Display a list of fields, each bolded
 	<list type="unordered">
 		@foreach ( field in displayFields ) {
-			<item>
+			<item id=null>
 				<bold>@( field.label )</bold>: @( field.value )
 			</item>
 		}

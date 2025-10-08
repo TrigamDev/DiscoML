@@ -1,6 +1,6 @@
 import {
 	carriageReturn, lineFeed
-} from "@disco/constants"
+} from "@tokenizer/tokenPatterns"
 
 const startingLine = 1
 const startingColumn = 1
