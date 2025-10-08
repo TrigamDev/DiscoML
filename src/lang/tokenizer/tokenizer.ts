@@ -232,7 +232,7 @@ export class Tokenizer {
 		if ( state ) {
 			console.log(
 				`Received token type: ${ TokenType[ lastType ] }, `
-				+ `\tTransitioning: ${ TokenizerState[ this.state ] } -> `
+				+ `\n\tTransitioning: ${ TokenizerState[ this.state ] } -> `
 				+ `${ TokenizerState[ state ] }`
 			)
 			this.state = state
