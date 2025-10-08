@@ -6,7 +6,7 @@ import {
 import {
 	identifier,
 	tagBracketClose, tagBracketOpen,
-	TagClosingSlash
+	tagClosingSlash
 } from "@tokenizer/tokenPatterns"
 import chalk from "chalk"
 
@@ -96,7 +96,7 @@ export class Tokenizer {
 				break
 			}
 			case TokenizerState.Tag: {
-				if ( this.test( TagClosingSlash ) ) return TokenType.TagClosingSlash
+				if ( this.test( tagClosingSlash ) ) return TokenType.TagClosingSlash
 				if ( this.test( tagBracketClose ) ) return TokenType.TagBracketClose
 				if ( this.test( identifier ) ) return TokenType.Identifier
 				break
