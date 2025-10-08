@@ -10,6 +10,7 @@ import {
 	commentMultiline,
 	commentXml,
 	identifier,
+	stringLiteral,
 	tagAttributeAssignment,
 	tagBracketClose, tagBracketOpen,
 	tagClosingSlash,
@@ -52,8 +53,6 @@ export class Tokenizer {
 	tokenize (): Token[] {
 		let colored = ""
 		while ( this.isTokenizing ) {
-			const char: string = this.getChar()
-
 			const token: Token = this.getToken()
 			this.updateState( token.type )
 
@@ -83,7 +82,7 @@ export class Tokenizer {
 					colored += chalk.yellow( token.content )
 					break
 				}
-				case TokenType.Identifier: {
+				case TokenType.TagIdentifier: {
 					colored += chalk.blue( token.content )
 					break
 				}
@@ -110,6 +109,8 @@ export class Tokenizer {
 					break
 				}
 			}
+
+			this.tokens.push( token )
 
 			this.location.forward( token.content )
 			this.isTokenizing = this.location.offset < this.source.length
@@ -143,23 +144,39 @@ export class Tokenizer {
 		const tokenType: TokenType = this.getTokenType()
 
 		let tokenValue: string = this.getChar()
+		let tokenPattern: RegExp | null = null
 		switch ( tokenType ) {
+			case TokenType.TagIdentifier:
+			case TokenType.TagAttributeIdentifier: {
+				tokenPattern = identifier
+				break
+			}
+			case TokenType.StringLiteral: {
+				tokenPattern = stringLiteral
+				break
+			}
+			case TokenType.Whitespace: {
+				tokenPattern = whitespace
+				break
+			}
 			case TokenType.Comment: {
-				const match = this.match( comment )
-				if ( match && match[ 0 ] ) [ tokenValue ] = match
+				tokenPattern = comment
 				break
 			}
 			case TokenType.XmlComment: {
-				const match = this.match( commentXml )
-				if ( match && match[ 0 ] ) [ tokenValue ] = match
+				tokenPattern = commentXml
 				break
 			}
 			case TokenType.MultilineComment: {
-				const match = this.match( commentMultiline )
-				if ( match && match[ 0 ] ) [ tokenValue ] = match
+				tokenPattern = commentMultiline
 				break
 			}
 			default: { break }
+		}
+
+		if ( tokenPattern ) {
+			const match = this.match( tokenPattern )
+			if ( match && match[ 0 ] ) [ tokenValue ] = match
 		}
 
 		const tokenEnd: Location = this.location.clone()
@@ -189,7 +206,7 @@ export class Tokenizer {
 				if ( this.test( tagClosingSlash ) ) return TokenType.TagClosingSlash
 				if ( this.test( tagBracketClose ) ) return TokenType.TagBracketClose
 				if ( this.test( whitespace ) ) return TokenType.Whitespace
-				if ( this.test( identifier ) ) return TokenType.Identifier
+				if ( this.test( identifier ) ) return TokenType.TagIdentifier
 				break
 			}
 			case TokenizerState.TagMiddle: {
@@ -328,7 +345,10 @@ export class Tokenizer {
 			*/
 			case TokenizerState.TagAttributeValue: {
 				switch ( lastType ) {
-					case TokenType.TagBracketClose:
+					case TokenType.TagBracketClose: {
+						this.state = TokenizerState.Body
+						break
+					}
 					case TokenType.TagSelfClosingSlash: {
 						this.state = TokenizerState.TagClose
 						break

@@ -4,23 +4,23 @@
 		info about the bot!
 	*/
 	<section>
-		<header level = 1>@( bot.name )</header>
+		<header level = "1">@( bot.name )</header>
 		<text>Wow! This is a cool bot!</text>
 
 		<accessory>
 			@if ( bot.getAvatar() ) {
-				<media url=@( bot.getAvatar() )>
+				<media url="@( bot.getAvatar() )">
 					A cool bot
 				</media>
 			} @else {
-				<media url=@( new CDN().defaultAvatar( 0 ) )>
+				<media url="@( new CDN().defaultAvatar( 0 ) )">
 					Maybe a not so cool bot
 				</media>
 			}
 		</accessory>
 	</section>
 
-	<separator spacing="small" divider=true />
+	<separator spacing="small" divider="true" />
 
 	// Display a list of fields, each bolded
 	<list type="unordered">
