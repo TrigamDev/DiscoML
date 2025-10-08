@@ -89,6 +89,50 @@ const TypePatternMap: Map<TokenType, RegExp> = new Map([
 	[TokenType.MultilineComment, commentMultiline],
 ]);
 
+const StatePatternMap: Map<TokenizerState, Map<RegExp, TokenType>> = new Map([
+	[TokenizerState.Body, new Map<RegExp, TokenType>([
+		[tagBracketOpen, TokenType.TagBracketOpen],
+		[comment, TokenType.Comment],
+		[commentXml, TokenType.XmlComment],
+		[commentMultiline, TokenType.MultilineComment]
+	])],
+	[TokenizerState.TagOpen, new Map<RegExp, TokenType>([
+		[tagClosingSlash, TokenType.TagClosingSlash],
+		[tagBracketClose, TokenType.TagBracketClose],
+		[whitespace, TokenType.Whitespace],
+		[identifier, TokenType.TagIdentifier]]
+	)],
+	[TokenizerState.TagMiddle, new Map<RegExp, TokenType>([
+		[tagClosingSlash, TokenType.TagSelfClosingSlash],
+		[whitespace, TokenType.Whitespace],
+		[identifier, TokenType.TagAttributeIdentifier]]
+	)],
+	[TokenizerState.TagClose, new Map<RegExp, TokenType>([
+		[tagBracketClose, TokenType.TagBracketClose]]
+	)],
+	[TokenizerState.TagAttributeName, new Map<RegExp, TokenType>([
+		[tagAttributeAssignment, TokenType.TagAttributeAssignment],
+		[whitespace, TokenType.Whitespace],
+		[identifier, TokenType.TagAttributeIdentifier]]
+	)],
+	[TokenizerState.TagAttributeAssignment, new Map<RegExp, TokenType>([
+		[whitespace, TokenType.Whitespace],
+		[stringLiteral, TokenType.StringLiteral],
+		[numericLiteral, TokenType.NumberLiteral],
+		[booleanLiteral, TokenType.BooleanLiteral],
+		[nullLiteral, TokenType.NullLiteral]]
+	)],
+	[TokenizerState.TagAttributeValue, new Map<RegExp, TokenType>([
+		[tagClosingSlash, TokenType.TagClosingSlash],
+		[tagBracketClose, TokenType.TagBracketClose],
+		[whitespace, TokenType.Whitespace],
+		[stringLiteral, TokenType.StringLiteral],
+		[numericLiteral, TokenType.NumberLiteral],
+		[booleanLiteral, TokenType.BooleanLiteral],
+		[nullLiteral, TokenType.NullLiteral]]
+	)]
+]);
+
 export class Tokenizer {
 	private source: string
 	private location: Location = new Location()
@@ -162,63 +206,19 @@ export class Tokenizer {
 
 	// eslint-disable-next-line complexity
 	getTokenType(): TokenType {
-		switch (this.state) {
-			case TokenizerState.Body: {
-				if (this.test(tagBracketOpen)) return TokenType.TagBracketOpen
-				if (this.test(comment)) return TokenType.Comment
-				if (this.test(commentXml)) return TokenType.XmlComment
-				if (this.test(commentMultiline)) return TokenType.MultilineComment
-				break
-			}
-			case TokenizerState.TagOpen: {
-				if (this.test(tagClosingSlash)) return TokenType.TagClosingSlash
-				if (this.test(tagBracketClose)) return TokenType.TagBracketClose
-				if (this.test(whitespace)) return TokenType.Whitespace
-				if (this.test(identifier)) return TokenType.TagIdentifier
-				break
-			}
-			case TokenizerState.TagMiddle: {
-				if (this.test(tagClosingSlash)) return TokenType.TagSelfClosingSlash
-				if (this.test(whitespace)) return TokenType.Whitespace
-				if (this.test(identifier)) return TokenType.TagAttributeIdentifier
-				break
-			}
-			case TokenizerState.TagClose: {
-				if (this.test(tagBracketClose)) return TokenType.TagBracketClose
-				break
-			}
-			case TokenizerState.TagAttributeName: {
-				if (this.test(tagAttributeAssignment)) return TokenType.TagAttributeAssignment
-				if (this.test(whitespace)) return TokenType.Whitespace
-				if (this.test(identifier)) return TokenType.TagAttributeIdentifier
-				break
-			}
-			case TokenizerState.TagAttributeAssignment: {
-				if (this.test(whitespace)) return TokenType.Whitespace
+		const patternTypeMap = StatePatternMap.get(this.state);
 
-				// Literals
-				if (this.test(stringLiteral)) return TokenType.StringLiteral
-				if (this.test(numericLiteral)) return TokenType.NumberLiteral
-				if (this.test(booleanLiteral)) return TokenType.BooleanLiteral
-				if (this.test(nullLiteral)) return TokenType.NullLiteral
-				break
-			}
-			case TokenizerState.TagAttributeValue: {
-				if (this.test(tagClosingSlash)) return TokenType.TagClosingSlash
-				if (this.test(tagBracketClose)) return TokenType.TagBracketClose
-				if (this.test(whitespace)) return TokenType.Whitespace
-
-				// Literals
-				if (this.test(stringLiteral)) return TokenType.StringLiteral
-				if (this.test(numericLiteral)) return TokenType.NumberLiteral
-				if (this.test(booleanLiteral)) return TokenType.BooleanLiteral
-				if (this.test(nullLiteral)) return TokenType.NullLiteral
-				break
-			}
-			default: { break }
+		if (!patternTypeMap) {
+			return TokenType.Text;
 		}
 
-		return TokenType.Text
+		for (const [pattern, type] of patternTypeMap.entries()) {
+			if (this.test(pattern)) {
+				return type;
+			}
+		}
+
+		return TokenType.Text;
 	}
 
 	updateState(lastType: TokenType): void {
