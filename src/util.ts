@@ -10,5 +10,5 @@ export function getDiscoSource ( input: string | DiscoImport ): string {
 		sourceText = input as string
 	}
 
-	return sourceText
+	return sourceText.replaceAll( "\r\n", "\n" )
 }
