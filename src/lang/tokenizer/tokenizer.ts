@@ -4,6 +4,7 @@ import {
 	TokenType
 } from "@tokenizer/token"
 import {
+	identifier,
 	tagBracketClose, tagBracketOpen,
 	TagClosingSlash
 } from "@tokenizer/tokenPatterns"
@@ -72,6 +73,7 @@ export class Tokenizer {
 			case TokenizerState.Tag: {
 				if ( this.test( TagClosingSlash ) ) return TokenType.TagClosingSlash
 				if ( this.test( tagBracketClose ) ) return TokenType.TagBracketClose
+				if ( this.test( identifier ) ) return TokenType.Identifier
 				break
 			}
 			default: { break }

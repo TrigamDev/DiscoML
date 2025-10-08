@@ -1,7 +1,8 @@
-import { TokenStream } from "@disco/lang/waitbad/tokenizer/tokenStream"
-import testComponent from "@test/lang/tokenizer/basic.dml"
+import { Tokenizer } from "@disco/lang/tokenizer/tokenizer"
+import { getDiscoSource } from "@disco/util"
+import testComponent from "@test/components/basic.dml"
 
-
-const toknenizer = new TokenStream( testComponent )
+const testSource: string = getDiscoSource( testComponent )
+const toknenizer = new Tokenizer( testSource )
 const tokens = toknenizer.tokenize()
 console.log( tokens )
