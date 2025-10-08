@@ -47,6 +47,7 @@ const StateTypeMap: Map<TokenizerState, Map<TokenType, TokenizerState>> = new Ma
 
 	[ TokenizerState.TagOpen, new Map<TokenType, TokenizerState>( [
 		[ TokenType.TagBracketClose, TokenizerState.Body ],
+		[ TokenType.TagIdentifier, TokenizerState.TagMiddle ],
 		[ TokenType.Whitespace, TokenizerState.TagMiddle ]
 	] ) ],
 
@@ -65,7 +66,10 @@ const StateTypeMap: Map<TokenizerState, Map<TokenType, TokenizerState>> = new Ma
 	] ) ],
 
 	[ TokenizerState.TagAttributeAssignment, new Map<TokenType, TokenizerState>( [
-		[ TokenType.StringLiteral, TokenizerState.TagAttributeValue ]
+		[ TokenType.StringLiteral, TokenizerState.TagAttributeValue ],
+		[ TokenType.NumberLiteral, TokenizerState.TagAttributeValue ],
+		[ TokenType.BooleanLiteral, TokenizerState.TagAttributeValue ],
+		[ TokenType.NullLiteral, TokenizerState.TagAttributeValue ]
 	] ) ],
 
 	[ TokenizerState.TagAttributeValue, new Map<TokenType, TokenizerState>( [
@@ -87,32 +91,28 @@ const StatePatternMap: Map<TokenizerState, Map<RegExp, TokenType>> = new Map( [
 		[ tagBracketClose, TokenType.TagBracketClose ],
 		[ whitespace, TokenType.Whitespace ],
 		[ identifier, TokenType.TagIdentifier ]
-	]
-	) ],
+	] ) ],
 	[ TokenizerState.TagMiddle, new Map<RegExp, TokenType>( [
 		[ tagClosingSlash, TokenType.TagSelfClosingSlash ],
+		[ tagBracketClose, TokenType.TagBracketClose ],
 		[ whitespace, TokenType.Whitespace ],
 		[ identifier, TokenType.TagAttributeIdentifier ]
-	]
-	) ],
+	] ) ],
 	[ TokenizerState.TagClose, new Map<RegExp, TokenType>( [
 		[ tagBracketClose, TokenType.TagBracketClose ]
-	]
-	) ],
+	] ) ],
 	[ TokenizerState.TagAttributeName, new Map<RegExp, TokenType>( [
 		[ tagAttributeAssignment, TokenType.TagAttributeAssignment ],
 		[ whitespace, TokenType.Whitespace ],
 		[ identifier, TokenType.TagAttributeIdentifier ]
-	]
-	) ],
+	] ) ],
 	[ TokenizerState.TagAttributeAssignment, new Map<RegExp, TokenType>( [
 		[ whitespace, TokenType.Whitespace ],
 		[ stringLiteral, TokenType.StringLiteral ],
 		[ numberLiteral, TokenType.NumberLiteral ],
 		[ booleanLiteral, TokenType.BooleanLiteral ],
 		[ nullLiteral, TokenType.NullLiteral ]
-	]
-	) ],
+	] ) ],
 	[ TokenizerState.TagAttributeValue, new Map<RegExp, TokenType>( [
 		[ tagClosingSlash, TokenType.TagClosingSlash ],
 		[ tagBracketClose, TokenType.TagBracketClose ],
@@ -121,18 +121,22 @@ const StatePatternMap: Map<TokenizerState, Map<RegExp, TokenType>> = new Map( [
 		[ numberLiteral, TokenType.NumberLiteral ],
 		[ booleanLiteral, TokenType.BooleanLiteral ],
 		[ nullLiteral, TokenType.NullLiteral ]
-	]
-	) ]
+	] ) ]
 ] )
 
 const TypePatternMap: Map<TokenType, RegExp> = new Map( [
-	[ TokenType.TagIdentifier, identifier ],
-	[ TokenType.TagAttributeIdentifier, identifier ],
+	[ TokenType.Whitespace, whitespace ],
 	[ TokenType.StringLiteral, stringLiteral ],
 	[ TokenType.NumberLiteral, numberLiteral ],
 	[ TokenType.BooleanLiteral, booleanLiteral ],
 	[ TokenType.NullLiteral, nullLiteral ],
-	[ TokenType.Whitespace, whitespace ],
+	[ TokenType.TagBracketOpen, tagBracketOpen ],
+	[ TokenType.TagBracketClose, tagBracketClose ],
+	[ TokenType.TagClosingSlash, tagClosingSlash ],
+	[ TokenType.TagSelfClosingSlash, tagClosingSlash ],
+	[ TokenType.TagIdentifier, identifier ],
+	[ TokenType.TagAttributeIdentifier, identifier ],
+	[ TokenType.TagAttributeAssignment, tagAttributeAssignment ],
 	[ TokenType.Comment, comment ],
 	[ TokenType.XmlComment, commentXml ],
 	[ TokenType.MultilineComment, commentMultiline ]
@@ -229,13 +233,16 @@ export class Tokenizer {
 	updateState ( lastType: TokenType ): void {
 		const state = StateTypeMap.get( this.state )?.get( lastType )
 
+		console.log( `Current state: ${ TokenizerState[ this.state ] }` )
+		console.log( `Received: ${ TokenType[ lastType ] }` )
+
 		if ( state ) {
-			console.log(
-				`Received token type: ${ TokenType[ lastType ] }, `
-				+ `\n\tTransitioning: ${ TokenizerState[ this.state ] } -> `
-				+ `${ TokenizerState[ state ] }`
-			)
+			console.log( `Transitioning to: ${ TokenizerState[ state ] }` )
 			this.state = state
+		} else {
+			console.log( "Couldn't tell what state to transition to, staying" )
 		}
+
+		console.log( "\n" )
 	}
 }
