@@ -1,4 +1,6 @@
-import { lineBreak } from "@disco/constants"
+import {
+	carriageReturn, lineFeed
+} from "@disco/constants"
 
 const startingLine = 1
 const startingColumn = 1
@@ -16,6 +18,20 @@ export class Location {
 		this.line = line
 		this.column = column
 		this.offset = offset
+	}
+
+	forward ( str: string ): void {
+		for ( const char of str ) {
+			this.column++
+			this.offset++
+
+			if ( carriageReturn.test( char ) ) {
+				this.column = startingColumn
+			}
+			if ( lineFeed.test( char ) ) {
+				this.line++
+			}
+		}
 	}
 
 	clone (): Location {
@@ -60,15 +76,7 @@ export class LocationSpan {
 	}
 
 	forward ( str: string ): void {
-		for ( const char of str ) {
-			this.end.column++
-			this.end.offset++
-
-			if ( lineBreak.test( char ) ) {
-				this.end.column = startingColumn
-				this.end.line++
-			}
-		}
+		this.end.forward( str )
 	}
 
 	between ( other: LocationSpan ): LocationSpan {

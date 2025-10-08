@@ -1,126 +1,176 @@
-/* eslint-disable no-unreachable */
-
-import { TokenType } from "@disco/lang/tokenizer/token"
-import { TokenStream } from "@disco/lang/tokenizer/tokenStream"
+/* eslint-disable no-magic-numbers */
+import {
+	Location, LocationSpan
+} from "@disco/lang/location"
+import {
+	Token, TokenType
+} from "@disco/lang/tokenizer/token"
+import { Tokenizer } from "@disco/lang/tokenizer/tokenizer"
+import { getDiscoSource } from "@disco/util"
 import basicComponent from "@test/components/basic.dml"
 import {
 	expect, test
 } from "bun:test"
 
-test( "basic", () => {
-	return // TODO: remove after im finished adding lexemizer tests
-	const toknenizer = new TokenStream( basicComponent )
-	const tokens = toknenizer.tokenize()
+test( "Basic tokenization", () => {
+	const sourceText: string = getDiscoSource( basicComponent )
+	const tokenizer: Tokenizer = new Tokenizer( sourceText )
 
-	console.log( basicComponent )
-
-	expect( tokens ).toEqual( [
-		{
-			type: TokenType.Tag,
-
-			name: "container",
-			attributes: [],
-			children: [
-				{
-					type: TokenType.Tag,
-
-					name: "text",
-					attributes: [],
-					children: [
-						{
-							type: TokenType.Text,
-
-							name: "",
-							attributes: [],
-							children: [],
-							raw: "Hello world",
-
-							location: {
-								start: {
-									position: 20,
-									line: 2,
-									column: 11
-								},
-								end: {
-									position: 31,
-									line: 2,
-									column: 22
-								}
-							}
-						}
-					],
-					raw: "<text>Hello world</text>",
-
-					location: {
-						start: {
-							position: 14,
-							line: 2,
-							column: 5
-						},
-						end: {
-							position: 38,
-							line: 2,
-							column: 29
-						}
-					}
-				},
-				{
-					type: TokenType.Tag,
-
-					name: "separator",
-					attributes: [],
-					children: [],
-					raw: "<separator/>",
-
-					location: {
-						start: {
-							position: 41,
-							line: 3,
-							column: 5
-						},
-						end: {
-							position: 53,
-							line: 3,
-							column: 17
-						}
-					}
-				}
-			],
-			raw: "<container>\n\t<text>Hello world</text>\n\t<separator/>\n</container>",
-
-			location: {
-				start: {
-					position: 0,
-					line: 1,
-					column: 1
-				},
-				end: {
-					position: 67,
-					line: 4,
-					column: 13
-				}
-			}
-		},
-		{
-			type: TokenType.EndOfFile,
-
-			name: "EOF",
-			attributes: [],
-			children: [],
-			raw: "EOF",
-
-			location: {
-				start: {
-					position: 67,
-					line: 4,
-					column: 13
-				},
-				end: {
-					position: 67,
-					line: 4,
-					column: 13
-				}
-			}
-		}
-	] )
+	expect( tokenizer.tokenize() )
+		.toEqual(
+			[
+				new Token(
+					TokenType.TagBracketOpen,
+					"<",
+					new LocationSpan(
+						new Location( 1, 1, 0 ),
+						new Location( 1, 2, 1 )
+					)
+				),
+				new Token(
+					TokenType.Identifier,
+					"container",
+					new LocationSpan(
+						new Location( 1, 1, 1 ),
+						new Location( 1, 11, 10 )
+					)
+				),
+				new Token(
+					TokenType.TagBracketClose,
+					">",
+					new LocationSpan(
+						new Location( 1, 11, 10 ),
+						new Location( 1, 12, 11 )
+					)
+				),
+				new Token(
+					TokenType.TagBracketOpen,
+					"<",
+					new LocationSpan(
+						new Location( 2, 2, 14 ),
+						new Location( 2, 3, 15 )
+					)
+				),
+				new Token(
+					TokenType.Identifier,
+					"text",
+					new LocationSpan(
+						new Location( 2, 3, 15 ),
+						new Location( 2, 7, 19 )
+					)
+				),
+				new Token(
+					TokenType.TagBracketClose,
+					">",
+					new LocationSpan(
+						new Location( 2, 7, 19 ),
+						new Location( 2, 8, 20 )
+					)
+				),
+				new Token(
+					TokenType.Text,
+					"Hello world",
+					new LocationSpan(
+						new Location( 2, 8, 20 ),
+						new Location( 2, 19, 31 )
+					)
+				),
+				new Token(
+					TokenType.TagBracketOpen,
+					"<",
+					new LocationSpan(
+						new Location( 2, 19, 31 ),
+						new Location( 2, 20, 32 )
+					)
+				),
+				new Token(
+					TokenType.TagClosingSlash,
+					"/",
+					new LocationSpan(
+						new Location( 2, 20, 32 ),
+						new Location( 2, 21, 33 )
+					)
+				),
+				new Token(
+					TokenType.Identifier,
+					"text",
+					new LocationSpan(
+						new Location( 2, 21, 33 ),
+						new Location( 2, 25, 37 )
+					)
+				),
+				new Token(
+					TokenType.TagBracketClose,
+					">",
+					new LocationSpan(
+						new Location( 2, 25, 37 ),
+						new Location( 2, 26, 38 )
+					)
+				),
+				new Token(
+					TokenType.TagBracketOpen,
+					"<",
+					new LocationSpan(
+						new Location( 3, 2, 41 ),
+						new Location( 3, 3, 42 )
+					)
+				),
+				new Token(
+					TokenType.Identifier,
+					"separator",
+					new LocationSpan(
+						new Location( 3, 3, 42 ),
+						new Location( 3, 12, 51 )
+					)
+				),
+				new Token(
+					TokenType.TagClosingSlash,
+					"/",
+					new LocationSpan(
+						new Location( 3, 12, 51 ),
+						new Location( 3, 13, 52 )
+					)
+				),
+				new Token(
+					TokenType.TagBracketClose,
+					">",
+					new LocationSpan(
+						new Location( 3, 13, 52 ),
+						new Location( 3, 14, 53 )
+					)
+				),
+				new Token(
+					TokenType.TagBracketOpen,
+					"<",
+					new LocationSpan(
+						new Location( 4, 1, 55 ),
+						new Location( 4, 2, 56 )
+					)
+				),
+				new Token(
+					TokenType.TagClosingSlash,
+					"/",
+					new LocationSpan(
+						new Location( 4, 2, 56 ),
+						new Location( 4, 3, 57 )
+					)
+				),
+				new Token(
+					TokenType.Identifier,
+					"container",
+					new LocationSpan(
+						new Location( 4, 3, 57 ),
+						new Location( 4, 12, 66 )
+					)
+				),
+				new Token(
+					TokenType.TagBracketClose,
+					">",
+					new LocationSpan(
+						new Location( 4, 12, 66 ),
+						new Location( 4, 13, 67 )
+					)
+				)
+			]
+		)
 } )

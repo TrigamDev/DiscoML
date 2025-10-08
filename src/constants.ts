@@ -1,6 +1,8 @@
 // Whitespace and comments
 export const whitespace = /\s+/v
 export const lineBreak = /\r\n|\r|\n|\f/v
+export const carriageReturn = /\r/v
+export const lineFeed = /\n/v
 export const comment = /\/\/(?<comment_content>.*)/v
 export const commentMultiline = /\/\*(?<comment_content>.*)\*\//sv
 export const commentXml = /<!--(?<comment_content>.*?)-->/sv

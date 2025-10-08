@@ -1,4 +1,4 @@
-import { TokenStream } from "@disco/lang/tokenizer/tokenStream"
+import { TokenStream } from "@disco/lang/waitbad/tokenizer/tokenStream"
 import testComponent from "@test/lang/tokenizer/basic.dml"
 
 

@@ -6,8 +6,8 @@
 			"@disco/*": ["./src/*"],
 			"@plugin/*": ["./plugin/*"],
 
-			"@lexemizer/*": ["./src/lang/lexemizer/*"],
-			"@tokenizer/*": ["./src/lang/tokenizer/*"],
+			"@lexemizer/*": ["src/lang/waitbad/lexemizer/*"],
+			"@tokenizer/*": ["src/lang/tokenizer/*"],
 			"@parser/*": ["./src/lang/parser*"],
 
 			"@test/*": ["./test/*"]

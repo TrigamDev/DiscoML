@@ -1,47 +1,52 @@
-/*
-	eslint-disable
-	no-unused-vars
-*/
+import type { LocationSpan } from "@disco/lang/location"
 
-import { LocationSpan } from "@disco/lang/location"
-
+/* eslint-disable no-unused-vars */
 export enum TokenType {
-	OpeningTagStart, // <tagname
-	OpeningTagEnd, // >
-	ChildlessTagEnd, // />
-	ClosingTag, // </tagname> // they have no attributes
-	AttributeStart, // Attributename=
-	String, // "text here"
-	CommentXmlStart, // <!--
-	CommentXmlEnd, // -->
-	DmlIndicator, // @
-	CommentDmlStart, // /*
-	CommentDmlEnd, // */
-	CommentDmlSingle, // //
-	If, // If
-	Else, // Else
-	ForEach, // Foreach
-	In, // In
-	BracketOpen, // (
-	BracketClose, // )
-	BracketWaveOpen, // {
-	BracketWaveClose, // }
-	Identifier, // [a-zA-Z_][\w_]*
-	PairContent // Anything between two pairs of anything
+	// Literals
+	Text,
+	Identifier,
+	String,
+	Number,
+	Boolean,
+	Null,
+
+	// Tag Components
+	TagBracketOpen,
+	TagBracketClose,
+	TagClosingSlash,
+	TagAttributeEquals,
+
+	// Directives
+	DirectiveIndicator,
+	IfDirective,
+	ElseIfDirective,
+	ElseDirective,
+	ForEachDirective,
+	ParenthesesOpen,
+	ParenthesesClose,
+	CurlyBraceOpen,
+	CurlyBraceClose,
+
+	// Comments
+	Comment,
+	XmlCommentStart,
+	XmlCommentEnd,
+	MultilineCommentStart,
+	MultilineCommentEnd
 }
 
 export class Token {
 	readonly type: TokenType
-	readonly locationSpan: LocationSpan
-	readonly content: string | null
+	readonly content: string
+	readonly span: LocationSpan
 
 	constructor (
 		type: TokenType,
-		locationSpan: LocationSpan,
-		content?: string
+		content: string,
+		span: LocationSpan
 	) {
 		this.type = type
-		this.locationSpan = locationSpan
-		this.content = content ?? null
+		this.content = content
+		this.span = span
 	}
 }
