@@ -43,38 +43,51 @@ enum TokenizerState {
 
 const StateTypeMap: Map<TokenizerState, Map<TokenType, TokenizerState>> = new Map()
 
-StateTypeMap.set( TokenizerState.Body, new Map( [
-	[ TokenType.TagBracketOpen, TokenizerState.TagOpen ]
-] ) )
+StateTypeMap.set(TokenizerState.Body, new Map([
+	[TokenType.TagBracketOpen, TokenizerState.TagOpen]
+]))
 
-StateTypeMap.set( TokenizerState.TagOpen, new Map( [
-	[ TokenType.TagBracketClose, TokenizerState.Body ],
-	[ TokenType.Whitespace, TokenizerState.TagMiddle ]
-] ) )
+StateTypeMap.set(TokenizerState.TagOpen, new Map([
+	[TokenType.TagBracketClose, TokenizerState.Body],
+	[TokenType.Whitespace, TokenizerState.TagMiddle]
+]))
 
-StateTypeMap.set( TokenizerState.TagMiddle, new Map( [
-	[ TokenType.TagBracketClose, TokenizerState.TagClose ],
-	[ TokenType.TagSelfClosingSlash, TokenizerState.TagClose ],
-	[ TokenType.TagAttributeIdentifier, TokenizerState.TagAttributeName ]
-] ) )
+StateTypeMap.set(TokenizerState.TagMiddle, new Map([
+	[TokenType.TagBracketClose, TokenizerState.TagClose],
+	[TokenType.TagSelfClosingSlash, TokenizerState.TagClose],
+	[TokenType.TagAttributeIdentifier, TokenizerState.TagAttributeName]
+]))
 
-StateTypeMap.set( TokenizerState.TagClose, new Map( [
-	[ TokenType.TagBracketClose, TokenizerState.Body ]
-] ) )
+StateTypeMap.set(TokenizerState.TagClose, new Map([
+	[TokenType.TagBracketClose, TokenizerState.Body]
+]))
 
-StateTypeMap.set( TokenizerState.TagAttributeName, new Map( [
-	[ TokenType.TagAttributeAssignment, TokenizerState.TagAttributeAssignment ]
-] ) )
+StateTypeMap.set(TokenizerState.TagAttributeName, new Map([
+	[TokenType.TagAttributeAssignment, TokenizerState.TagAttributeAssignment]
+]))
 
-StateTypeMap.set( TokenizerState.TagAttributeAssignment, new Map( [
-	[ TokenType.StringLiteral, TokenizerState.TagAttributeValue ]
-] ) )
+StateTypeMap.set(TokenizerState.TagAttributeAssignment, new Map([
+	[TokenType.StringLiteral, TokenizerState.TagAttributeValue]
+]))
 
-StateTypeMap.set( TokenizerState.TagAttributeValue, new Map( [
-	[ TokenType.TagBracketClose, TokenizerState.Body ],
-	[ TokenType.TagSelfClosingSlash, TokenizerState.TagClose ],
-	[ TokenType.Whitespace, TokenizerState.TagMiddle ]
-] ) )
+StateTypeMap.set(TokenizerState.TagAttributeValue, new Map([
+	[TokenType.TagBracketClose, TokenizerState.Body],
+	[TokenType.TagSelfClosingSlash, TokenizerState.TagClose],
+	[TokenType.Whitespace, TokenizerState.TagMiddle]
+]))
+
+const TypePatternMap: Map<TokenType, RegExp> = new Map([
+	[TokenType.TagIdentifier, identifier],
+	[TokenType.TagAttributeIdentifier, identifier],
+	[TokenType.StringLiteral, stringLiteral],
+	[TokenType.NumberLiteral, numericLiteral],
+	[TokenType.BooleanLiteral, booleanLiteral],
+	[TokenType.NullLiteral, nullLiteral],
+	[TokenType.Whitespace, whitespace],
+	[TokenType.Comment, comment],
+	[TokenType.XmlComment, commentXml],
+	[TokenType.MultilineComment, commentMultiline],
+]);
 
 export class Tokenizer {
 	private source: string
@@ -85,25 +98,25 @@ export class Tokenizer {
 
 	private tokens: Token[] = []
 
-	constructor ( source: string ) {
+	constructor(source: string) {
 		this.source = source
 	}
 
-	tokenize (): Token[] {
-		while ( this.isTokenizing ) {
+	tokenize(): Token[] {
+		while (this.isTokenizing) {
 			const token: Token = this.getToken()
-			this.updateState( token.type )
+			this.updateState(token.type)
 
-			this.tokens.push( token )
+			this.tokens.push(token)
 
-			this.location.forward( token.content )
+			this.location.forward(token.content)
 			this.isTokenizing = this.location.offset < this.source.length
 		}
 
 		return this.tokens
 	}
 
-	getChar (): string {
+	getChar(): string {
 		return this.source.substring(
 			this.location.offset,
 			// eslint-disable-next-line no-magic-numbers
@@ -111,71 +124,31 @@ export class Tokenizer {
 		)
 	}
 
-	test ( pattern: RegExp ): boolean {
-		return pattern.test( this.source.substring( this.location.offset ) )
+	test(pattern: RegExp): boolean {
+		return pattern.test(this.source.substring(this.location.offset))
 	}
 
-	match ( pattern: RegExp ): RegExpMatchArray | null {
+	match(pattern: RegExp): RegExpMatchArray | null {
 		const matches: RegExpMatchArray | null = this.source
-			.substring( this.location.offset )
-			.match( pattern )
+			.substring(this.location.offset)
+			.match(pattern)
 
 		return matches
 	}
 
-	getToken (): Token {
+	getToken(): Token {
 		const tokenType: TokenType = this.getTokenType()
 
 		let tokenValue: string = this.getChar()
-		let tokenPattern: RegExp | null = null
-		switch ( tokenType ) {
-			case TokenType.TagIdentifier:
-			case TokenType.TagAttributeIdentifier: {
-				tokenPattern = identifier
-				break
-			}
-			case TokenType.StringLiteral: {
-				tokenPattern = stringLiteral
-				break
-			}
-			case TokenType.NumberLiteral: {
-				tokenPattern = numericLiteral
-				break
-			}
-			case TokenType.BooleanLiteral: {
-				tokenPattern = booleanLiteral
-				break
-			}
-			case TokenType.NullLiteral: {
-				tokenPattern = nullLiteral
-				break
-			}
-			case TokenType.Whitespace: {
-				tokenPattern = whitespace
-				break
-			}
-			case TokenType.Comment: {
-				tokenPattern = comment
-				break
-			}
-			case TokenType.XmlComment: {
-				tokenPattern = commentXml
-				break
-			}
-			case TokenType.MultilineComment: {
-				tokenPattern = commentMultiline
-				break
-			}
-			default: { break }
-		}
+		let tokenPattern: RegExp | undefined = TypePatternMap.get(tokenType);
 
-		if ( tokenPattern ) {
-			const match = this.match( tokenPattern )
-			if ( match && match[ 0 ] ) [ tokenValue ] = match
+		if (tokenPattern) {
+			const match = this.match(tokenPattern)
+			if (match && match[0]) [tokenValue] = match
 		}
 
 		const tokenEnd: Location = this.location.clone()
-		tokenEnd.forward( tokenValue )
+		tokenEnd.forward(tokenValue)
 
 		return new Token(
 			tokenType,
@@ -188,58 +161,58 @@ export class Tokenizer {
 	}
 
 	// eslint-disable-next-line complexity
-	getTokenType (): TokenType {
-		switch ( this.state ) {
+	getTokenType(): TokenType {
+		switch (this.state) {
 			case TokenizerState.Body: {
-				if ( this.test( tagBracketOpen ) ) return TokenType.TagBracketOpen
-				if ( this.test( comment ) ) return TokenType.Comment
-				if ( this.test( commentXml ) ) return TokenType.XmlComment
-				if ( this.test( commentMultiline ) ) return TokenType.MultilineComment
+				if (this.test(tagBracketOpen)) return TokenType.TagBracketOpen
+				if (this.test(comment)) return TokenType.Comment
+				if (this.test(commentXml)) return TokenType.XmlComment
+				if (this.test(commentMultiline)) return TokenType.MultilineComment
 				break
 			}
 			case TokenizerState.TagOpen: {
-				if ( this.test( tagClosingSlash ) ) return TokenType.TagClosingSlash
-				if ( this.test( tagBracketClose ) ) return TokenType.TagBracketClose
-				if ( this.test( whitespace ) ) return TokenType.Whitespace
-				if ( this.test( identifier ) ) return TokenType.TagIdentifier
+				if (this.test(tagClosingSlash)) return TokenType.TagClosingSlash
+				if (this.test(tagBracketClose)) return TokenType.TagBracketClose
+				if (this.test(whitespace)) return TokenType.Whitespace
+				if (this.test(identifier)) return TokenType.TagIdentifier
 				break
 			}
 			case TokenizerState.TagMiddle: {
-				if ( this.test( tagClosingSlash ) ) return TokenType.TagSelfClosingSlash
-				if ( this.test( whitespace ) ) return TokenType.Whitespace
-				if ( this.test( identifier ) ) return TokenType.TagAttributeIdentifier
+				if (this.test(tagClosingSlash)) return TokenType.TagSelfClosingSlash
+				if (this.test(whitespace)) return TokenType.Whitespace
+				if (this.test(identifier)) return TokenType.TagAttributeIdentifier
 				break
 			}
 			case TokenizerState.TagClose: {
-				if ( this.test( tagBracketClose ) ) return TokenType.TagBracketClose
+				if (this.test(tagBracketClose)) return TokenType.TagBracketClose
 				break
 			}
 			case TokenizerState.TagAttributeName: {
-				if ( this.test( tagAttributeAssignment ) ) return TokenType.TagAttributeAssignment
-				if ( this.test( whitespace ) ) return TokenType.Whitespace
-				if ( this.test( identifier ) ) return TokenType.TagAttributeIdentifier
+				if (this.test(tagAttributeAssignment)) return TokenType.TagAttributeAssignment
+				if (this.test(whitespace)) return TokenType.Whitespace
+				if (this.test(identifier)) return TokenType.TagAttributeIdentifier
 				break
 			}
 			case TokenizerState.TagAttributeAssignment: {
-				if ( this.test( whitespace ) ) return TokenType.Whitespace
+				if (this.test(whitespace)) return TokenType.Whitespace
 
 				// Literals
-				if ( this.test( stringLiteral ) ) return TokenType.StringLiteral
-				if ( this.test( numericLiteral ) ) return TokenType.NumberLiteral
-				if ( this.test( booleanLiteral ) ) return TokenType.BooleanLiteral
-				if ( this.test( nullLiteral ) ) return TokenType.NullLiteral
+				if (this.test(stringLiteral)) return TokenType.StringLiteral
+				if (this.test(numericLiteral)) return TokenType.NumberLiteral
+				if (this.test(booleanLiteral)) return TokenType.BooleanLiteral
+				if (this.test(nullLiteral)) return TokenType.NullLiteral
 				break
 			}
 			case TokenizerState.TagAttributeValue: {
-				if ( this.test( tagClosingSlash ) ) return TokenType.TagClosingSlash
-				if ( this.test( tagBracketClose ) ) return TokenType.TagBracketClose
-				if ( this.test( whitespace ) ) return TokenType.Whitespace
+				if (this.test(tagClosingSlash)) return TokenType.TagClosingSlash
+				if (this.test(tagBracketClose)) return TokenType.TagBracketClose
+				if (this.test(whitespace)) return TokenType.Whitespace
 
 				// Literals
-				if ( this.test( stringLiteral ) ) return TokenType.StringLiteral
-				if ( this.test( numericLiteral ) ) return TokenType.NumberLiteral
-				if ( this.test( booleanLiteral ) ) return TokenType.BooleanLiteral
-				if ( this.test( nullLiteral ) ) return TokenType.NullLiteral
+				if (this.test(stringLiteral)) return TokenType.StringLiteral
+				if (this.test(numericLiteral)) return TokenType.NumberLiteral
+				if (this.test(booleanLiteral)) return TokenType.BooleanLiteral
+				if (this.test(nullLiteral)) return TokenType.NullLiteral
 				break
 			}
 			default: { break }
@@ -248,16 +221,11 @@ export class Tokenizer {
 		return TokenType.Text
 	}
 
-	updateState ( lastType: TokenType ): void {
-		const state = StateTypeMap.get( this.state )?.get( lastType )
+	updateState(lastType: TokenType): void {
+		const state = StateTypeMap.get(this.state)?.get(lastType)
 
-		if ( !state ) {
-			throw new DmlParseError(
-				"Invalid State and Type combo: "
-				+ `${ TokenizerState[ this.state ] } - ${ TokenType[ lastType ] }`
-			)
+		if (state) {
+			this.state = state;
 		}
-
-		this.state = state
 	}
 }
