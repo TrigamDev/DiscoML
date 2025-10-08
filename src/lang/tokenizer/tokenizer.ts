@@ -41,40 +41,40 @@ enum TokenizerState {
 	TagAttributeValue
 }
 
-const StateTypeMap: Map<TokenizerState, Map<TokenType, TokenizerState>> = new Map()
+const StateTypeMap: Map<TokenizerState, Map<TokenType, TokenizerState>> = new Map([
+	[TokenizerState.Body, new Map<TokenType, TokenizerState>([
+		[TokenType.TagBracketOpen, TokenizerState.TagOpen]
+	])],
 
-StateTypeMap.set(TokenizerState.Body, new Map([
-	[TokenType.TagBracketOpen, TokenizerState.TagOpen]
-]))
+	[TokenizerState.TagOpen, new Map<TokenType, TokenizerState>([
+		[TokenType.TagBracketClose, TokenizerState.Body],
+		[TokenType.Whitespace, TokenizerState.TagMiddle]
+	])],
 
-StateTypeMap.set(TokenizerState.TagOpen, new Map([
-	[TokenType.TagBracketClose, TokenizerState.Body],
-	[TokenType.Whitespace, TokenizerState.TagMiddle]
-]))
+	[TokenizerState.TagMiddle, new Map<TokenType, TokenizerState>([
+		[TokenType.TagBracketClose, TokenizerState.TagClose],
+		[TokenType.TagSelfClosingSlash, TokenizerState.TagClose],
+		[TokenType.TagAttributeIdentifier, TokenizerState.TagAttributeName]
+	])],
 
-StateTypeMap.set(TokenizerState.TagMiddle, new Map([
-	[TokenType.TagBracketClose, TokenizerState.TagClose],
-	[TokenType.TagSelfClosingSlash, TokenizerState.TagClose],
-	[TokenType.TagAttributeIdentifier, TokenizerState.TagAttributeName]
-]))
+	[TokenizerState.TagClose, new Map<TokenType, TokenizerState>([
+		[TokenType.TagBracketClose, TokenizerState.Body]
+	])],
 
-StateTypeMap.set(TokenizerState.TagClose, new Map([
-	[TokenType.TagBracketClose, TokenizerState.Body]
-]))
+	[TokenizerState.TagAttributeName, new Map<TokenType, TokenizerState>([
+		[TokenType.TagAttributeAssignment, TokenizerState.TagAttributeAssignment]
+	])],
 
-StateTypeMap.set(TokenizerState.TagAttributeName, new Map([
-	[TokenType.TagAttributeAssignment, TokenizerState.TagAttributeAssignment]
-]))
+	[TokenizerState.TagAttributeAssignment, new Map<TokenType, TokenizerState>([
+		[TokenType.StringLiteral, TokenizerState.TagAttributeValue]
+	])],
 
-StateTypeMap.set(TokenizerState.TagAttributeAssignment, new Map([
-	[TokenType.StringLiteral, TokenizerState.TagAttributeValue]
-]))
-
-StateTypeMap.set(TokenizerState.TagAttributeValue, new Map([
-	[TokenType.TagBracketClose, TokenizerState.Body],
-	[TokenType.TagSelfClosingSlash, TokenizerState.TagClose],
-	[TokenType.Whitespace, TokenizerState.TagMiddle]
-]))
+	[TokenizerState.TagAttributeValue, new Map<TokenType, TokenizerState>([
+		[TokenType.TagBracketClose, TokenizerState.Body],
+		[TokenType.TagSelfClosingSlash, TokenizerState.TagClose],
+		[TokenType.Whitespace, TokenizerState.TagMiddle]
+	])]
+]);
 
 const TypePatternMap: Map<TokenType, RegExp> = new Map([
 	[TokenType.TagIdentifier, identifier],
