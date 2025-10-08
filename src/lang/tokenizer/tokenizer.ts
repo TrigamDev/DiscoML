@@ -16,8 +16,6 @@ import {
 	identifier,
 	nullLiteral,
 	numberLiteral,
-	parenthesesClose,
-	parenthesesOpen,
 	stringLiteral,
 	tagAttributeAssignment,
 	tagBracketClose, tagBracketOpen,
@@ -42,12 +40,16 @@ enum TokenizerState {
 	TagClose,
 	TagAttributeName,
 	TagAttributeAssignment,
-	TagAttributeValue
+	TagAttributeValue,
+
+	// Directives
+	Directive
 }
 
 const StateTypeMap: Map<TokenizerState, Map<TokenType, TokenizerState>> = new Map( [
 	[ TokenizerState.Body, new Map<TokenType, TokenizerState>( [
-		[ TokenType.TagBracketOpen, TokenizerState.TagOpen ]
+		[ TokenType.TagBracketOpen, TokenizerState.TagOpen ],
+		[ TokenType.DirectiveIndicator, TokenizerState.Directive ]
 	] ) ],
 
 	[ TokenizerState.TagOpen, new Map<TokenType, TokenizerState>( [
@@ -81,12 +83,21 @@ const StateTypeMap: Map<TokenizerState, Map<TokenType, TokenizerState>> = new Ma
 		[ TokenType.TagBracketClose, TokenizerState.Body ],
 		[ TokenType.TagSelfClosingSlash, TokenizerState.TagClose ],
 		[ TokenType.Whitespace, TokenizerState.TagMiddle ]
+	] ) ],
+
+	[ TokenizerState.Directive, new Map<TokenType, TokenizerState>( [
+		[ TokenType.DirectiveIdentifier, TokenizerState.Directive ],
+		[ TokenType.DirectiveContent, TokenizerState.Body ],
+		[ TokenType.CurlyBraceOpen, TokenizerState.Body ]
 	] ) ]
 ] )
 
 const StatePatternMap: Map<TokenizerState, Map<RegExp, TokenType>> = new Map( [
 	[ TokenizerState.Body, new Map<RegExp, TokenType>( [
 		[ tagBracketOpen, TokenType.TagBracketOpen ],
+		[ directiveIndicator, TokenType.DirectiveIndicator ],
+		[ curlyBraceOpen, TokenType.CurlyBraceOpen ],
+		[ curlyBraceClose, TokenType.CurlyBraceClose ],
 		[ comment, TokenType.Comment ],
 		[ commentXml, TokenType.XmlComment ],
 		[ commentMultiline, TokenType.MultilineComment ]
@@ -132,6 +143,12 @@ const StatePatternMap: Map<TokenizerState, Map<RegExp, TokenType>> = new Map( [
 		[ numberLiteral, TokenType.NumberLiteral ],
 		[ booleanLiteral, TokenType.BooleanLiteral ],
 		[ nullLiteral, TokenType.NullLiteral ]
+	] ) ],
+
+	[ TokenizerState.Directive, new Map<RegExp, TokenType>( [
+		[ identifier, TokenType.DirectiveIdentifier ],
+		[ directiveContent, TokenType.DirectiveContent ],
+		[ curlyBraceOpen, TokenType.CurlyBraceOpen ]
 	] ) ]
 ] )
 
@@ -158,8 +175,6 @@ const TypePatternMap: Map<TokenType, RegExp> = new Map( [
 	[ TokenType.DirectiveIndicator, directiveIndicator ],
 	[ TokenType.DirectiveIdentifier, identifier ],
 	[ TokenType.DirectiveContent, directiveContent ],
-	[ TokenType.ParenthesesOpen, parenthesesOpen ],
-	[ TokenType.ParenthesesClose, parenthesesClose ],
 	[ TokenType.CurlyBraceOpen, curlyBraceOpen ],
 	[ TokenType.CurlyBraceClose, curlyBraceClose ],
 

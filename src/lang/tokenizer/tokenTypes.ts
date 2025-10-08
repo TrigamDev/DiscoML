@@ -23,8 +23,6 @@ export enum TokenType {
 	DirectiveIndicator,
 	DirectiveIdentifier,
 	DirectiveContent,
-	ParenthesesOpen,
-	ParenthesesClose,
 	CurlyBraceOpen,
 	CurlyBraceClose,
 
@@ -57,8 +55,6 @@ export const tagAttributeAssignment = /^[=]/v
 // Directives
 export const directiveIndicator = /^@/v
 export const directiveContent = /^(?:\((?<directive_content>.*)\))/v
-export const parenthesesOpen = /^\(/v
-export const parenthesesClose = /^\)/v
 export const curlyBraceOpen = /^\{/v
 export const curlyBraceClose = /^\}/v
 
