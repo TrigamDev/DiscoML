@@ -5,14 +5,30 @@ import {
 } from "@tokenizer/token"
 import {
 	identifier,
+	tagAttributeAssignment,
 	tagBracketClose, tagBracketOpen,
-	tagClosingSlash
+	tagClosingSlash,
+	whitespace
 } from "@tokenizer/tokenPatterns"
 import chalk from "chalk"
 
 enum TokenizerState {
+	// General
 	Body,
-	Tag
+
+	// Literals
+	StringLiteral,
+	NumberLiteral,
+	BooleanLiteral,
+	NullLiteral,
+
+	// Tag Components
+	TagOpen,
+	TagMiddle,
+	TagClose,
+	TagAttributeName,
+	TagAttributeAssignment,
+	TagAttributeValue
 }
 
 export class Tokenizer {
@@ -42,19 +58,43 @@ export class Tokenizer {
 					break
 				}
 				case TokenType.TagBracketClose: {
-					colored += chalk.black( char )
+					colored += chalk.gray( char )
 					break
 				}
 				case TokenType.TagClosingSlash: {
+					colored += chalk.gray( char )
+					break
+				}
+				case TokenType.TagSelfClosingSlash: {
 					colored += chalk.red( char )
+					break
+				}
+				case TokenType.TagAttributeAssignment: {
+					colored += chalk.green( char )
+					break
+				}
+				case TokenType.StringLiteral: {
+					colored += chalk.yellow( char )
 					break
 				}
 				case TokenType.Identifier: {
 					colored += chalk.blue( char )
 					break
 				}
+				case TokenType.TagAttributeIdentifier: {
+					colored += chalk.cyan( char )
+					break
+				}
+				case TokenType.Whitespace: {
+					colored += chalk.bgGray( char )
+					break
+				}
+				case TokenType.Text: {
+					colored += chalk.white( char )
+					break
+				}
 				default: {
-					colored += char
+					colored += chalk.black( char )
 					break
 				}
 			}
@@ -95,10 +135,41 @@ export class Tokenizer {
 				if ( this.test( tagBracketOpen ) ) return TokenType.TagBracketOpen
 				break
 			}
-			case TokenizerState.Tag: {
+			case TokenizerState.TagOpen: {
 				if ( this.test( tagClosingSlash ) ) return TokenType.TagClosingSlash
 				if ( this.test( tagBracketClose ) ) return TokenType.TagBracketClose
+				if ( this.test( whitespace ) ) return TokenType.Whitespace
 				if ( this.test( identifier ) ) return TokenType.Identifier
+				break
+			}
+			case TokenizerState.TagMiddle: {
+				if ( this.test( tagClosingSlash ) ) return TokenType.TagSelfClosingSlash
+				if ( this.test( whitespace ) ) return TokenType.Whitespace
+				if ( this.test( identifier ) ) return TokenType.TagAttributeIdentifier
+				break
+			}
+			case TokenizerState.TagClose: {
+				if ( this.test( tagBracketClose ) ) return TokenType.TagBracketClose
+				break
+			}
+			case TokenizerState.TagAttributeName: {
+				if ( this.test( tagAttributeAssignment ) ) return TokenType.TagAttributeAssignment
+				if ( this.test( whitespace ) ) return TokenType.Whitespace
+				if ( this.test( identifier ) ) return TokenType.TagAttributeIdentifier
+				break
+			}
+			case TokenizerState.TagAttributeAssignment: {
+				if ( this.test( whitespace ) ) return TokenType.Whitespace
+
+				return TokenType.StringLiteral
+			}
+			case TokenizerState.TagAttributeValue: {
+				if ( this.test( tagClosingSlash ) ) return TokenType.TagClosingSlash
+				if ( this.test( tagBracketClose ) ) return TokenType.TagBracketClose
+				if ( this.test( whitespace ) ) return TokenType.Whitespace
+
+				// TODO: Literal types
+				if ( this.test( identifier ) ) return TokenType.StringLiteral
 				break
 			}
 			default: { break }
@@ -110,12 +181,12 @@ export class Tokenizer {
 	updateState ( lastType: TokenType ): void {
 		switch ( this.state ) {
 			/*
-			   Tokenizer state: Body
+			   Body
 			*/
 			case TokenizerState.Body: {
 				switch ( lastType ) {
 					case TokenType.TagBracketOpen: {
-						this.state = TokenizerState.Tag
+						this.state = TokenizerState.TagOpen
 						break
 					}
 					default: { break }
@@ -124,9 +195,46 @@ export class Tokenizer {
 			}
 
 			/*
-			   Tokenizer state: Tag
+			   Tag Open
 			*/
-			case TokenizerState.Tag: {
+			case TokenizerState.TagOpen: {
+				switch ( lastType ) {
+					case TokenType.TagBracketClose: {
+						this.state = TokenizerState.Body
+						break
+					}
+					case TokenType.Whitespace: {
+						this.state = TokenizerState.TagMiddle
+						break
+					}
+					default: { break }
+				}
+				break
+			}
+
+			/*
+			   Tag Middle
+			*/
+			case TokenizerState.TagMiddle: {
+				switch ( lastType ) {
+					case TokenType.TagBracketClose:
+					case TokenType.TagSelfClosingSlash: {
+						this.state = TokenizerState.TagClose
+						break
+					}
+					case TokenType.TagAttributeIdentifier: {
+						this.state = TokenizerState.TagAttributeName
+						break
+					}
+					default: { break }
+				}
+				break
+			}
+
+			/*
+			   Tag Close
+			*/
+			case TokenizerState.TagClose: {
 				switch ( lastType ) {
 					case TokenType.TagBracketClose: {
 						this.state = TokenizerState.Body
@@ -136,6 +244,55 @@ export class Tokenizer {
 				}
 				break
 			}
+
+			/*
+			   Tokenizer state: Tag attribute name
+			*/
+			case TokenizerState.TagAttributeName: {
+				switch ( lastType ) {
+					case TokenType.TagAttributeAssignment: {
+						this.state = TokenizerState.TagAttributeAssignment
+						break
+					}
+					default: { break }
+				}
+				break
+			}
+
+			/*
+			   Tokenizer state: Tag attribute assignment
+			*/
+			case TokenizerState.TagAttributeAssignment: {
+				switch ( lastType ) {
+					case TokenType.StringLiteral: {
+						this.state = TokenizerState.TagAttributeValue
+						break
+					}
+					default: { break }
+				}
+				break
+			}
+
+			/*
+			   Tokenizer state: Tag attribute value
+			*/
+			case TokenizerState.TagAttributeValue: {
+				switch ( lastType ) {
+					case TokenType.TagBracketClose:
+					case TokenType.TagSelfClosingSlash: {
+						this.state = TokenizerState.TagClose
+						break
+					}
+					case TokenType.Whitespace: {
+						this.state = TokenizerState.TagMiddle
+						break
+					}
+					default: { break }
+				}
+				break
+			}
+
+
 			default: { break }
 		}
 	}

@@ -4,7 +4,7 @@
 		info about the bot!
 	*/
 	<section>
-		<header level=1>@( bot.name )</header>
+		<header level = 1>@( bot.name )</header>
 		<text>Wow! This is a cool bot!</text>
 
 		<accessory>

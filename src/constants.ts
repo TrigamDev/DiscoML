@@ -12,7 +12,7 @@ export const startTagOpen = /<(?![!])/v
 export const endTagOpen = /<\//v
 export const tagClose = />/v
 export const tagSelfClose = /\/>/v
-export const equals = /[=]/v
+export const equals = /^[=]/v
 
 // Directives
 export const directiveIndicator = /@/v
