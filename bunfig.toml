@@ -1,1 +1,4 @@
 preload = [ "./plugin/discoResolver.ts" ]
+
+[test]
+preload = [ "./plugin/discoResolver.ts" ]

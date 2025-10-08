@@ -2,7 +2,7 @@
 
 import { TokenType } from "@disco/lang/tokenizer/token"
 import { TokenStream } from "@disco/lang/tokenizer/tokenStream"
-import basicComponent from "@test/lang/tokenizer/basic.dml"
+import basicComponent from "@test/components/basic.dml"
 import {
 	expect, test
 } from "bun:test"

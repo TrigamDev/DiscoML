@@ -38,7 +38,7 @@ export class Location {
 		}
 	}
 }
-interface LocationObject {
+export interface LocationObject {
 	line: number
 	column: number
 	offset: number
@@ -51,28 +51,23 @@ export class LocationSpan {
 		start: Location = new Location(),
 		end: Location = new Location()
 	) {
-		this.start = start
-		this.end = end
-	}
-
-	clone (): LocationSpan {
-		return new LocationSpan(
-			this.start,
-			this.end
-		)
+		this.start = start.clone()
+		this.end = end.clone()
 	}
 
 	snapToEnd (): void {
-		this.end = this.start.clone()
+		this.start = this.end.clone()
 	}
 
-	forward ( char: string ): void {
-		this.end.column++
-		this.end.offset++
+	forward ( str: string ): void {
+		for ( const char of str ) {
+			this.end.column++
+			this.end.offset++
 
-		if ( lineBreak.test( char ) ) {
-			this.end.column = 1
-			this.end.line++
+			if ( lineBreak.test( char ) ) {
+				this.end.column = startingColumn
+				this.end.line++
+			}
 		}
 	}
 
@@ -81,6 +76,13 @@ export class LocationSpan {
 		const end = this.end.offset > other.end.offset ? this.end : other.end
 
 		return new LocationSpan( start.clone(), end.clone() )
+	}
+
+	clone (): LocationSpan {
+		return new LocationSpan(
+			this.start.clone(),
+			this.end.clone()
+		)
 	}
 
 	toString (): string {
@@ -97,7 +99,7 @@ export class LocationSpan {
 		}
 	}
 }
-interface LocationSpanObject {
+export interface LocationSpanObject {
 	start: LocationObject
 	end: LocationObject
 }

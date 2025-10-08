@@ -3,43 +3,69 @@
 	no-unused-vars
 */
 
-import type { LocationSpan } from "@disco/lang/location"
+import {
+	identifier, whitespace
+} from "@disco/constants"
+import {
+	LocationSpan, type LocationSpanObject
+} from "@disco/lang/location"
 
 export enum LexemeType {
-	Whitespace,
-	Special,
-	Word
+	Unknown = "unknown",
+	Whitespace = "whitespace",
+	Special = "special",
+	Word = "word"
 }
-
-const whitespaces = /\s/v
-
-// https://stackoverflow.com/a/30225759, because \w does not include diacritics
-const wordChars = /[\wÀ-ÖØ-öø-įĴ-őŔ-žǍ-ǰǴ-ǵǸ-țȞ-ȟȤ-ȳɃɆ-ɏḀ-ẞƀ-ƓƗ-ƚƝ-ơƤ-ƥƫ-ưƲ-ƶẠ-ỿ]/v // eslint-disable-line @stylistic/max-len
 
 export class Lexeme {
 	readonly type: LexemeType
 	content: string
-	readonly locationSpan: LocationSpan
+	readonly span: LocationSpan
 
-	constructor ( type: LexemeType, char: string, location: LocationSpan ) {
+	constructor (
+		type: LexemeType = LexemeType.Unknown,
+		char: string = "",
+		span: LocationSpan = new LocationSpan()
+	) {
 		this.type = type
 		this.content = char
-		this.locationSpan = location.clone()
+		this.span = span.clone()
 	}
 
 	static typeFromChar ( char: string ): LexemeType {
-		if ( whitespaces.test( char ) ) {
+		if ( whitespace.test( char ) ) {
 			return LexemeType.Whitespace
 		}
 
-		if ( wordChars.test( char ) ) {
+		if ( identifier.test( char ) ) {
 			return LexemeType.Word
 		}
 
 		return LexemeType.Special
 	}
 
-	static fromChar ( char: string, location: LocationSpan ): Lexeme {
-		return new Lexeme( this.typeFromChar( char ), char, location )
+	static fromChar ( char: string, span: LocationSpan ): Lexeme {
+		return new Lexeme( this.typeFromChar( char ), char, span.clone() )
 	}
+
+	toString (): string {
+		return "Lexeme("
+			+ `type=${ this.type },`
+			+ `content="${ this.content }", `
+			+ `span=${ this.span }`
+			+ ")"
+	}
+
+	toJSON (): LexemeObject {
+		return {
+			type: this.type,
+			content: this.content,
+			span: this.span.toJSON()
+		}
+	}
+}
+export interface LexemeObject {
+	type: LexemeType
+	content: string
+	span: LocationSpanObject
 }

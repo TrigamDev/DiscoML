@@ -6,17 +6,15 @@ import { LexemeStream } from "@disco/lang/lexemizer/lexemeStream"
 import {
 	Location, LocationSpan
 } from "@disco/lang/location"
+import { getDiscoSource } from "@disco/util"
+import diacriticsComponent from "@test/components/basic_diacritics.dml"
 import {
 	expect, test
 } from "bun:test"
 
 test( "new LexemeStream(string) diacritics", () => {
-	const source = `<container>
-	<text>Hallöchen Leute!</text>
-	<separator/>
-</container>`
-
-	const stream = new LexemeStream( source )
+	const sourceText: string = getDiscoSource( diacriticsComponent )
+	const stream = new LexemeStream( sourceText )
 
 	expect(
 		stream.drain()
@@ -90,7 +88,7 @@ test( "new LexemeStream(string) diacritics", () => {
 				LexemeType.Whitespace,
 				" ",
 				new LocationSpan(
-					new Location( 2, 17, 18 ),
+					new Location( 2, 17, 28 ),
 					new Location( 2, 18, 29 )
 				)
 			),
@@ -179,7 +177,7 @@ test( "new LexemeStream(string) diacritics", () => {
 				">",
 				new LocationSpan(
 					new Location( 3, 13, 55 ),
-					new Location( 3, 14, 54 )
+					new Location( 3, 14, 56 )
 				)
 			),
 			new Lexeme(

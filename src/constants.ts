@@ -20,7 +20,7 @@ export const directiveForeachIndicator = /@foreach/v
 export const directiveContent = /(?:\((?<directive_content>.*)\))/v
 
 // Identifiers and attributes
-export const identifier = /[\p{L}\p{N}\-_]*/v
+export const identifier = /[\p{L}\p{N}\-_]+/v
 export const attributeValue = /"[^"]*"|'[^']*'/v
 
 // Data types
