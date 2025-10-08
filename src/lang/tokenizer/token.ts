@@ -1,8 +1,43 @@
 import { TokenType } from "@tokenizer/tokenTypes"
-import chalk from "chalk"
+import chalk, { type ChalkInstance } from "chalk"
 import type {
 	LocationSpan, LocationSpanObject
 } from "@disco/lang/location"
+
+const TypeColorMap: Map<TokenType, ChalkInstance> = new Map( [
+	// General
+	[ TokenType.Whitespace, chalk.bgGray ],
+	[ TokenType.Text, chalk.white ],
+
+	// Literals
+	[ TokenType.StringLiteral, chalk.yellow ],
+	[ TokenType.NumberLiteral, chalk.green ],
+	[ TokenType.BooleanLiteral, chalk.magenta ],
+	[ TokenType.NullLiteral, chalk.red ],
+
+	// Tag Components
+	[ TokenType.TagBracketOpen, chalk.gray ],
+	[ TokenType.TagBracketClose, chalk.gray ],
+	[ TokenType.TagClosingSlash, chalk.gray ],
+	[ TokenType.TagClosingSlash, chalk.red ],
+	[ TokenType.TagIdentifier, chalk.blue ],
+	[ TokenType.TagAttributeIdentifier, chalk.cyan ],
+	[ TokenType.TagAttributeAssignment, chalk.gray ],
+
+	// Directives
+	[ TokenType.DirectiveIndicator, chalk.red ],
+	[ TokenType.DirectiveIdentifier, chalk.magenta ],
+	[ TokenType.DirectiveContent, chalk.greenBright ],
+	[ TokenType.ParenthesesOpen, chalk.gray ],
+	[ TokenType.ParenthesesClose, chalk.gray ],
+	[ TokenType.CurlyBraceOpen, chalk.gray ],
+	[ TokenType.CurlyBraceClose, chalk.gray ],
+
+	// Comments
+	[ TokenType.Comment, chalk.green ],
+	[ TokenType.XmlComment, chalk.green ],
+	[ TokenType.MultilineComment, chalk.green ]
+] )
 
 export class Token {
 	readonly type: TokenType
@@ -23,61 +58,8 @@ export class Token {
 	toString (): string {
 		let colorized: string = chalk.gray( this.content )
 
-		switch ( this.type ) {
-			case TokenType.TagBracketOpen:
-			case TokenType.TagBracketClose:
-			case TokenType.TagClosingSlash: {
-				colorized = chalk.gray( this.content )
-				break
-			}
-			case TokenType.TagSelfClosingSlash: {
-				colorized = chalk.red( this.content )
-				break
-			}
-			case TokenType.TagIdentifier: {
-				colorized = chalk.blue( this.content )
-				break
-			}
-			case TokenType.TagAttributeIdentifier: {
-				colorized = chalk.cyan( this.content )
-				break
-			}
-			case TokenType.TagAttributeAssignment: {
-				colorized = chalk.gray( this.content )
-				break
-			}
-			case TokenType.StringLiteral: {
-				colorized = chalk.yellow( this.content )
-				break
-			}
-			case TokenType.NumberLiteral: {
-				colorized = chalk.green( this.content )
-				break
-			}
-			case TokenType.BooleanLiteral: {
-				colorized = chalk.magenta( this.content )
-				break
-			}
-			case TokenType.NullLiteral: {
-				colorized = chalk.red( this.content )
-				break
-			}
-			case TokenType.Whitespace: {
-				colorized = chalk.bgGray( this.content )
-				break
-			}
-			case TokenType.Text: {
-				colorized = chalk.white( this.content )
-				break
-			}
-			case TokenType.Comment:
-			case TokenType.XmlComment:
-			case TokenType.MultilineComment: {
-				colorized = chalk.green( this.content )
-				break
-			}
-			default: { break }
-		}
+		const colorer = TypeColorMap.get( this.type )
+		if ( colorer ) colorized = colorer( this.content )
 
 		return colorized
 	}
