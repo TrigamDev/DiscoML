@@ -19,7 +19,6 @@ const TypeColorMap: Map<TokenType, ChalkInstance> = new Map( [
 	[ TokenType.TagBracketOpen, chalk.gray ],
 	[ TokenType.TagBracketClose, chalk.gray ],
 	[ TokenType.TagClosingSlash, chalk.gray ],
-	[ TokenType.TagClosingSlash, chalk.red ],
 	[ TokenType.TagIdentifier, chalk.blue ],
 	[ TokenType.TagAttributeIdentifier, chalk.cyan ],
 	[ TokenType.TagAttributeAssignment, chalk.gray ],
@@ -28,8 +27,8 @@ const TypeColorMap: Map<TokenType, ChalkInstance> = new Map( [
 	[ TokenType.DirectiveIndicator, chalk.red ],
 	[ TokenType.DirectiveIdentifier, chalk.magenta ],
 	[ TokenType.DirectiveContent, chalk.greenBright ],
-	[ TokenType.ParenthesesOpen, chalk.gray ],
-	[ TokenType.ParenthesesClose, chalk.gray ],
+	[ TokenType.CurlyBraceOpen, chalk.gray ],
+	[ TokenType.CurlyBraceClose, chalk.gray ],
 	[ TokenType.CurlyBraceOpen, chalk.gray ],
 	[ TokenType.CurlyBraceClose, chalk.gray ],
 

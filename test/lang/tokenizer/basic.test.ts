@@ -18,8 +18,11 @@ import {
 test( "Basic tokenization", () => {
 	const sourceText: string = getDiscoSource( basicComponent )
 	const tokenizer: Tokenizer = new Tokenizer( sourceText )
+	const tokens = tokenizer.drain()
 
-	expect( tokenizer.drain() )
+	console.log( tokens.map( ( token ) => token.toString() ).join( "" ) )
+
+	expect( tokens )
 		.toEqual(
 			[
 				new Token(
