@@ -85,26 +85,31 @@ const StatePatternMap: Map<TokenizerState, Map<RegExp, TokenType>> = new Map( [
 		[ commentXml, TokenType.XmlComment ],
 		[ commentMultiline, TokenType.MultilineComment ]
 	] ) ],
+
 	[ TokenizerState.TagOpen, new Map<RegExp, TokenType>( [
 		[ tagClosingSlash, TokenType.TagClosingSlash ],
 		[ tagBracketClose, TokenType.TagBracketClose ],
 		[ whitespace, TokenType.Whitespace ],
 		[ identifier, TokenType.TagIdentifier ]
 	] ) ],
+
 	[ TokenizerState.TagMiddle, new Map<RegExp, TokenType>( [
 		[ tagClosingSlash, TokenType.TagSelfClosingSlash ],
 		[ tagBracketClose, TokenType.TagBracketClose ],
 		[ whitespace, TokenType.Whitespace ],
 		[ identifier, TokenType.TagAttributeIdentifier ]
 	] ) ],
+
 	[ TokenizerState.TagClose, new Map<RegExp, TokenType>( [
 		[ tagBracketClose, TokenType.TagBracketClose ]
 	] ) ],
+
 	[ TokenizerState.TagAttributeName, new Map<RegExp, TokenType>( [
 		[ tagAttributeAssignment, TokenType.TagAttributeAssignment ],
 		[ whitespace, TokenType.Whitespace ],
 		[ identifier, TokenType.TagAttributeIdentifier ]
 	] ) ],
+
 	[ TokenizerState.TagAttributeAssignment, new Map<RegExp, TokenType>( [
 		[ whitespace, TokenType.Whitespace ],
 		[ stringLiteral, TokenType.StringLiteral ],
@@ -112,6 +117,7 @@ const StatePatternMap: Map<TokenizerState, Map<RegExp, TokenType>> = new Map( [
 		[ booleanLiteral, TokenType.BooleanLiteral ],
 		[ nullLiteral, TokenType.NullLiteral ]
 	] ) ],
+
 	[ TokenizerState.TagAttributeValue, new Map<RegExp, TokenType>( [
 		[ tagClosingSlash, TokenType.TagClosingSlash ],
 		[ tagBracketClose, TokenType.TagBracketClose ],
@@ -158,9 +164,7 @@ export class Tokenizer {
 		while ( this.isTokenizing ) {
 			const token: Token = this.getToken()
 			this.updateState( token.type )
-
 			this.tokens.push( token )
-
 			this.location.forward( token.content )
 			this.isTokenizing = this.location.offset < this.source.length
 		}
@@ -196,7 +200,9 @@ export class Tokenizer {
 
 		if ( tokenPattern ) {
 			const match = this.match( tokenPattern )
-			if ( match && match[ 0 ] ) [ tokenValue ] = match
+			if ( match && match[ 0 ] ) {
+				[ tokenValue ] = match
+			}
 		}
 
 		const tokenEnd: Location = this.location.clone()
@@ -211,7 +217,6 @@ export class Tokenizer {
 			)
 		)
 	}
-
 
 	getTokenType (): TokenType {
 		const patternTypeMap = StatePatternMap.get( this.state )
