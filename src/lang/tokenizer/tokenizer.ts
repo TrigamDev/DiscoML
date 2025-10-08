@@ -1,3 +1,4 @@
+import { DmlParseError } from "@disco/error"
 import {
 	Location, LocationSpan
 } from "@disco/lang/location"
@@ -39,6 +40,41 @@ enum TokenizerState {
 	TagAttributeAssignment,
 	TagAttributeValue
 }
+
+const StateTypeMap: Map<TokenizerState, Map<TokenType, TokenizerState>> = new Map()
+
+StateTypeMap.set( TokenizerState.Body, new Map( [
+	[ TokenType.TagBracketOpen, TokenizerState.TagOpen ]
+] ) )
+
+StateTypeMap.set( TokenizerState.TagOpen, new Map( [
+	[ TokenType.TagBracketClose, TokenizerState.Body ],
+	[ TokenType.Whitespace, TokenizerState.TagMiddle ]
+] ) )
+
+StateTypeMap.set( TokenizerState.TagMiddle, new Map( [
+	[ TokenType.TagBracketClose, TokenizerState.TagClose ],
+	[ TokenType.TagSelfClosingSlash, TokenizerState.TagClose ],
+	[ TokenType.TagAttributeIdentifier, TokenizerState.TagAttributeName ]
+] ) )
+
+StateTypeMap.set( TokenizerState.TagClose, new Map( [
+	[ TokenType.TagBracketClose, TokenizerState.Body ]
+] ) )
+
+StateTypeMap.set( TokenizerState.TagAttributeName, new Map( [
+	[ TokenType.TagAttributeAssignment, TokenizerState.TagAttributeAssignment ]
+] ) )
+
+StateTypeMap.set( TokenizerState.TagAttributeAssignment, new Map( [
+	[ TokenType.StringLiteral, TokenizerState.TagAttributeValue ]
+] ) )
+
+StateTypeMap.set( TokenizerState.TagAttributeValue, new Map( [
+	[ TokenType.TagBracketClose, TokenizerState.Body ],
+	[ TokenType.TagSelfClosingSlash, TokenizerState.TagClose ],
+	[ TokenType.Whitespace, TokenizerState.TagMiddle ]
+] ) )
 
 export class Tokenizer {
 	private source: string
@@ -213,100 +249,12 @@ export class Tokenizer {
 	}
 
 	updateState ( lastType: TokenType ): void {
-		switch ( this.state ) {
-			case TokenizerState.Body: {
-				switch ( lastType ) {
-					case TokenType.TagBracketOpen: {
-						this.state = TokenizerState.TagOpen
-						break
-					}
-					default: { break }
-				}
-				break
-			}
-			case TokenizerState.TagOpen: {
-				switch ( lastType ) {
-					case TokenType.TagBracketClose: {
-						this.state = TokenizerState.Body
-						break
-					}
-					case TokenType.Whitespace: {
-						this.state = TokenizerState.TagMiddle
-						break
-					}
-					default: { break }
-				}
-				break
-			}
-			case TokenizerState.TagMiddle: {
-				switch ( lastType ) {
-					case TokenType.TagBracketClose:
-					case TokenType.TagSelfClosingSlash: {
-						this.state = TokenizerState.TagClose
-						break
-					}
-					case TokenType.TagAttributeIdentifier: {
-						this.state = TokenizerState.TagAttributeName
-						break
-					}
-					default: { break }
-				}
-				break
-			}
-			case TokenizerState.TagClose: {
-				switch ( lastType ) {
-					case TokenType.TagBracketClose: {
-						this.state = TokenizerState.Body
-						break
-					}
-					default: { break }
-				}
-				break
-			}
-			case TokenizerState.TagAttributeName: {
-				switch ( lastType ) {
-					case TokenType.TagAttributeAssignment: {
-						this.state = TokenizerState.TagAttributeAssignment
-						break
-					}
-					default: { break }
-				}
-				break
-			}
-			case TokenizerState.TagAttributeAssignment: {
-				switch ( lastType ) {
-					case TokenType.StringLiteral:
-					case TokenType.NumberLiteral:
-					case TokenType.BooleanLiteral:
-					case TokenType.NullLiteral: {
-						this.state = TokenizerState.TagAttributeValue
-						break
-					}
-					default: { break }
-				}
-				break
-			}
-			case TokenizerState.TagAttributeValue: {
-				switch ( lastType ) {
-					case TokenType.TagBracketClose: {
-						this.state = TokenizerState.Body
-						break
-					}
-					case TokenType.TagSelfClosingSlash: {
-						this.state = TokenizerState.TagClose
-						break
-					}
-					case TokenType.Whitespace: {
-						this.state = TokenizerState.TagMiddle
-						break
-					}
-					default: { break }
-				}
-				break
-			}
+		const state = StateTypeMap.get( this.state )?.get( lastType )
 
-
-			default: { break }
+		if ( !state ) {
+			throw new DmlParseError( `Invalid State and Type combo: ${ this.state } ${ lastType }` )
 		}
+
+		this.state = state
 	}
 }
