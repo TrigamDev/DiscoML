@@ -235,7 +235,7 @@ export class Tokenizer {
 				if ( this.test( tagBracketClose ) ) return TokenType.TagBracketClose
 				if ( this.test( whitespace ) ) return TokenType.Whitespace
 
-				// TODO: Literal types
+				// Literals
 				if ( this.test( identifier ) ) return TokenType.StringLiteral
 				break
 			}
@@ -247,9 +247,6 @@ export class Tokenizer {
 
 	updateState ( lastType: TokenType ): void {
 		switch ( this.state ) {
-			/*
-			   Body
-			*/
 			case TokenizerState.Body: {
 				switch ( lastType ) {
 					case TokenType.TagBracketOpen: {
@@ -260,10 +257,6 @@ export class Tokenizer {
 				}
 				break
 			}
-
-			/*
-			   Tag Open
-			*/
 			case TokenizerState.TagOpen: {
 				switch ( lastType ) {
 					case TokenType.TagBracketClose: {
@@ -278,10 +271,6 @@ export class Tokenizer {
 				}
 				break
 			}
-
-			/*
-			   Tag Middle
-			*/
 			case TokenizerState.TagMiddle: {
 				switch ( lastType ) {
 					case TokenType.TagBracketClose:
@@ -297,10 +286,6 @@ export class Tokenizer {
 				}
 				break
 			}
-
-			/*
-			   Tag Close
-			*/
 			case TokenizerState.TagClose: {
 				switch ( lastType ) {
 					case TokenType.TagBracketClose: {
@@ -311,10 +296,6 @@ export class Tokenizer {
 				}
 				break
 			}
-
-			/*
-			   Tag attribute name
-			*/
 			case TokenizerState.TagAttributeName: {
 				switch ( lastType ) {
 					case TokenType.TagAttributeAssignment: {
@@ -325,10 +306,6 @@ export class Tokenizer {
 				}
 				break
 			}
-
-			/*
-			   Tag attribute assignment
-			*/
 			case TokenizerState.TagAttributeAssignment: {
 				switch ( lastType ) {
 					case TokenType.StringLiteral: {
@@ -339,10 +316,6 @@ export class Tokenizer {
 				}
 				break
 			}
-
-			/*
-			   Tag attribute value
-			*/
 			case TokenizerState.TagAttributeValue: {
 				switch ( lastType ) {
 					case TokenType.TagBracketClose: {
