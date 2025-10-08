@@ -232,16 +232,8 @@ export class Tokenizer {
 	updateState ( lastType: TokenType ): void {
 		const state = StateTypeMap.get( this.state )?.get( lastType )
 
-		console.log( `Current state: ${ TokenizerState[ this.state ] }` )
-		console.log( `Received: ${ TokenType[ lastType ] }` )
-
-		if ( state ) {
-			console.log( `Transitioning to: ${ TokenizerState[ state ] }` )
+		if ( state || state === 0 ) {
 			this.state = state
-		} else {
-			console.log( "Couldn't tell what state to transition to, staying" )
 		}
-
-		console.log( "\n" )
 	}
 }
