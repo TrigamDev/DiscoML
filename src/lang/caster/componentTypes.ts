@@ -115,7 +115,7 @@ class Description implements MessageComponent {
 }
 
 /**
- * <image isThumbnail=bool>image url here</image>
+ * <image url="https://example.com/etc.png" isThumbnail=bool />
  */
 class Image implements MessageComponent {
 	render ( componentData: object ): object {
@@ -142,7 +142,7 @@ class Field implements MessageComponent {
 }
 
 /**
- * <footer icon="https://example.com/etc.png">value text</footer>
+ * <footer icon="https://example.com/etc.png">footer text</footer>
  */
 class Footer implements MessageComponent {
 	render ( componentData: object ): object {
@@ -162,7 +162,7 @@ class Timestamp implements MessageComponent {
 	}
 }
 
-// TODO: MediaGallery, File
+// TODO: MediaGallery, File, Seperator
 
 // TODO: make constructors and make them throw errors when shit goes wrong
 
