@@ -162,7 +162,47 @@ class Timestamp implements MessageComponent {
 	}
 }
 
-// TODO: MediaGallery, File, Seperator
+/**
+ * <separator divider spacing="small" />
+ * or
+ * <separator spacing="large"/>
+ */
+class Separator implements MessageComponent {
+	render ( componentData: object ): object {
+		return componentData ?? this
+	}
+}
+
+/**
+ * <gallery>
+ *    etc...
+ * </gallery>
+ */
+class MediaGallery implements MessageComponent {
+	render ( componentData: object ): object {
+		return componentData ?? this
+	}
+}
+
+/**
+ * <media url="" />
+ * or
+ * <media url="" alt="" spoiler />
+ */
+class MediaGalleryItem implements MessageComponent {
+	render ( componentData: object ): object {
+		return componentData ?? this
+	}
+}
+
+/**
+ * <file url="" />
+ */
+class File implements MessageComponent {
+	render ( componentData: object ): object {
+		return componentData ?? this
+	}
+}
 
 // TODO: make constructors and make them throw errors when shit goes wrong
 
@@ -183,7 +223,11 @@ const TagNodeMap = new Map<string, new ( node: DmlNode )=> MessageComponent>( [
 	[ "author", Author ],
 	[ "field", Field ],
 	[ "footer", Footer ],
-	[ "timestamp", Timestamp ]
+	[ "timestamp", Timestamp ],
+	[ "separator", Separator ],
+	[ "gallery", MediaGallery ],
+	[ "media", MediaGalleryItem ],
+	[ "file", File ]
 ] )
 
 function MessageComponentNodeFactory ( node: DmlNode ): MessageComponent {
