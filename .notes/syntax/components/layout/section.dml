@@ -9,9 +9,9 @@
 	- None
 
 	Contents:
-	- `content`: 1 to 3 `<text>`s
-		- The content contextually associated with the `accessory`
-	- `accessory`: 1 `<button>` or 1 `<thumbnail>`
+	- 1 to 3 `<text>`s
+		- The content contextually associated with the accessory
+	- 1 `<button>` or 1 `<thumbnail>`
 		- The accessory of the section
 */
 
