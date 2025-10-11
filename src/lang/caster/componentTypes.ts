@@ -259,8 +259,6 @@ class File implements MessageComponent {
 	}
 }
 
-// TODO: instance fields for the classes
-
 // TODO: make constructors and make them throw errors when shit goes wrong
 
 // TODO: finally, render component
