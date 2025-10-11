@@ -69,12 +69,14 @@ class Text implements MessageComponent {
 }
 
 /**
- * <section>
+ * <section color="#RRGGBB" spoiler>
  *    etc.
  * </section>
  */
 class Section implements MessageComponent {
-	// TODO: what the fuck kinda kids does Section have again?
+	private children: ( Text | Section | Row | File | MediaGallery | Separator )[]
+	private color: number | null
+	private spoiler: boolean
 	render ( componentData: object ): object {
 		return componentData ?? this
 	}
@@ -116,7 +118,8 @@ class Option implements MessageComponent {
  * </container>
  */
 class Container implements MessageComponent {
-	// TODO: what the fuck kinda kids does Container have again?
+	private text: Text[]
+	private button: Button | null
 	render ( componentData: object ): object {
 		return componentData ?? this
 	}
