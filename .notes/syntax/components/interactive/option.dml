@@ -1,0 +1,57 @@
+/*
+	Represents:
+	- https://discord.com/developers/docs/components/reference#string-select-select-option-structure
+
+	Aliases:
+	- `<option>`
+
+	Properties:
+	- `type`: `string`
+		- The type of option it is
+		- Can be one of:
+			- `"string"`
+			- `"user"`
+			- `"role"`
+			- `"channel"`
+	- `value`: `string` or `snowflake`
+		- The value of the option
+		- If `type` is `"string"`:
+			- The type of `value` should be `string`
+		- If `type` is `"user"`, `"role"`, or `"channel"`:
+			- The type of `value` should be `snowflake`
+
+	Contents:
+	- If `type` is `"string"`:
+		- `label`: 1 `<label>`
+			- The label of the option
+		- `emoji?`: 1 `<emoji>`
+			- An emoji to display alongside the label
+		- `description`: 1 `<description>`
+			- The description of the option
+	- If `type` is `"user"`, `"role"`, or `"channel"`:
+		- None
+*/
+
+<option value="apple" type="string">
+	<label>Apple</label>
+	<emoji>🍎</emoji>
+	<description>A red fruit with a stem and core</description>
+</option>
+
+<option value="grapes" type="string">
+	<label>Grapes</label>
+	<emoji>🍇</emoji>
+	<description>Small, round fruits that grow into a bunch</description>
+</option>
+
+<option value="grapefruit" type="string">
+	<label>Grapefruit</label>
+	<emoji id="...">grapefruit</emoji>
+	<description>... it tastes disgusting</description>
+</option>
+
+<option value="480828680604614675" type="user" />
+
+<option value="1366158838931128432" type="role" />
+
+<option value="1366158669926105239" type="channel" />

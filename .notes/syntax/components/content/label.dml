@@ -1,0 +1,16 @@
+/*
+	Represents:
+	- `label` field of https://discord.com/developers/docs/components/reference#button
+	- `label` field of https://discord.com/developers/docs/components/reference#string-select-select-option-structure
+
+	Properties:
+	- None
+
+	Contents:
+	- `label`: `string`
+		- A string of text
+*/
+
+<label>
+	Awesome!
+</label>

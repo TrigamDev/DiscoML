@@ -1,9 +1,18 @@
 /*
-	Represents: https://discord.com/developers/docs/components/reference#separator
+	Represents:
+	- https://discord.com/developers/docs/components/reference#separator
+
+	Aliases:
+	- `<separator>`
 	
 	Properties:
-	- spacing: The amount of spacing to use (either "small" or "large")
-	- divider: Whether to show a visible divider
+	- `spacing`: `string`
+		- The amount of spacing to use
+		- Can be either:
+			- `"small"`
+			- `"large"`
+	- `divider`: `boolean`
+		- Whether to show a visible divider
 */
 
 <separator id="separator" spacing="small" divider=true />

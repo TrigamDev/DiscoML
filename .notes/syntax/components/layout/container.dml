@@ -1,14 +1,26 @@
 /*
-	Represents: https://discord.com/developers/docs/components/reference#container
+	Represents:
+	- https://discord.com/developers/docs/components/reference#container
+
+	Aliases:
+	- `<container>`
 
 	Properties:
-	- color: Accent color of the container (in RGB)
-	- spoiler: Whether the container is a spoiler
+	- `accent`: `number`
+		- Accent color of the container (in RGB)
+	- `spoiler`: `boolean`
+		- Whether the container is a spoiler
 
 	Contents:
-	- Up to 10 components of type <section>, <separator>, <text>, <gallery>, <file>, or <actions>
+	- Any of:
+		- `<actions>`
+		- `<text>`
+		- `<section>`
+		- `<gallery>`
+		- `<separator>`
+		- `<file>`
 */
 
-<container color=0x3F48CC spoiler=false>
+<container accent=0x3F48CC spoiler=false>
 	/* ... */
 </container>

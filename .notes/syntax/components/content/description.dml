@@ -1,0 +1,15 @@
+/*
+	Represents:
+	- `description` field of https://discord.com/developers/docs/components/reference#string-select-select-option-structure
+
+	Properties:
+	- None
+
+	Contents:
+	- `description`: `string`
+		- A string of text
+*/
+
+<description>
+	A really descriptive description
+</description>

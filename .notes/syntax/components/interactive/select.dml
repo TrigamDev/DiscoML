@@ -6,67 +6,67 @@
 	- https://discord.com/developers/docs/components/reference#role-select
 	- https://discord.com/developers/docs/components/reference#mentionable-select
 
+	Aliases:
+	- `<select>`
+	- `<string-select>`
+		- The `type` property will be unavailable and force-set to `"string"`
+	- `<user-select>`
+		- The `type` property will be unavailable and force-set to `"user"`
+	- `<role-select>`
+		- The `type` property will be unavailable and force-set to `"role"`
+	- `<channel-select>`
+		- The `type` property will be unavailable and force-set to `"channel"`
+	- `<mentionable-select>`
+		- The `type` property will be unavailable and force-set to `"mentionable"`
+
 	Properties:
-	- id: Optional identifier to reference the component
-	- type: The type of select menu it is ("string", "user", "role", "channel", or "mentionable")
+	- `id?`: `string`
+		- Identifier to reference the select
+	- `type`: `string`
+		- The type of select menu it is
 		- This will be inferred by the contained options if unspecified
-	- placeholder: A placeholder string to display when there's no selection made
-	- disabled: Whether the select menu is disabled
-	- min: The minimum number of options that must be chosen
-	- max: The maximum number of options that can be chosen
-	- channel_types: The types of channels to include (if type is "channel")
+		- Can be one of:
+			- `"string"`
+			- `"user"`
+			- `"role"`
+			- `"channel"`
+			- `"mentionable"`
+	- `placeholder`: `string`
+		- A placeholder string to display when there's no selection made
+	- `required`: `boolean`
+		- Whether the select is required to answer in a modal
+	- `disabled`: `boolean`
+		- Whether the select menu is disabled
+	- `min`: `number`
+		- The minimum number of options that must be chosen
+	- `max`: `number`
+		- The maximum number of options that can be chosen
+	- `channel_types`: `string[]`
+		- The types of channels to include
+		- Only available when the `type` is `"channel"`
+		- Can contain any of:
+			- `"guild_text"`
+			- `"dm"`
+			- `"guild_voice"`
+			- `"group_dm"`
+			- `"guild_category"`
+			- `"guild_announcement"`
+			- `"announcement_thread"`
+			- `"public_thread"`
+			- `"private_thread"`
+			- `"guild_stage_voice"`
+			- `"guild_directory"`
+			- `"guild_forum"`
+			- `"guild_media"`
 
 	Contents:
-	- Up to 25 <option>s
-		- If type is "user", "role", "channel", or "mentionable", these are instead
-		  treated as the default options, being auto-selected
+	- `options`: Up to 25 `<option>`s
+		- If `type` is `"string"`:
+			- The available choices to choose from
+		- If `type` is `"user"`, `"role"`, `"channel"`, or `"mentionable"`
+			- Options to auto-populate the select menu with
 */
 
 <select id="string-select" placeholder="What fruits would you like in your salad?" min=1 max=3>
-	<option value="apple" type="string">
-		<text>Apple</text>
-		<emoji>🍎</emoji>
-		<description>A red fruit with a stem and core</description>
-	</option>
-	<option value="grapes" type="string">
-		<text>Grapes</text>
-		<emoji>🍇</emoji>
-		<description>Small, round fruits that grow into a bunch</description>
-	</option>
-	<option value="grapefruit" type="string">
-		<text>Grapefruit</text>
-		<emoji id="...">grapefruit</emoji>
-		<description>... it tastes disgusting</description>
-	</option>
+	/* ... */
 </select>
-
-
-
-/*
-	Represents:
-	- https://discord.com/developers/docs/components/reference#string-select-select-option-structure
-	- https://discord.com/developers/docs/components/reference#user-select-select-default-value-structure
-
-	Properties:
-	- value: The value of the option (either a string or id, based on the type)
-	- type: The type of option it is ("string", "user", "role", or "channel")
-
-	Contents:
-	- If type is "string"
-		- [Required] 1 <text> as the option's label
-		- 1 <emoji> to display alongside the label
-		- 1 <description> to describe the option
-			- <description> is analagous to <text>, exists solely for context
-*/
-
-<option value="apple" type="string">
-	<text>Apple</text>
-	<emoji>🍎</emoji>
-	<description>A red fruit with a stem and core</description>
-</option>
-
-<option value="480828680604614675" type="user" />
-
-<option value="1366158838931128432" type="role" />
-
-<option value="1366158669926105239" type="channel" />

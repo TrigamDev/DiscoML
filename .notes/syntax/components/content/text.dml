@@ -1,10 +1,13 @@
 /*
-	Represents: https://discord.com/developers/docs/components/reference#text-display
+	Represents:
+	- https://discord.com/developers/docs/components/reference#text-display
 
-	Properties: none
+	Properties:
+	- None
 
 	Contents:
-	- A string of text
+	- `text`: `string`
+		- A string of text
 */
 
 <text>

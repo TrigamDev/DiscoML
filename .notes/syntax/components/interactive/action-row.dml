@@ -1,10 +1,21 @@
 /*
-	Represents: https://discord.com/developers/docs/components/reference#action-row
+	Represents:
+	- https://discord.com/developers/docs/components/reference#action-row
 
-	Properties: none
+	Aliases:
+	- `<actions>`
+	- `<row>`
+	- `<action-row>`
+
+	Properties:
+	- None
 
 	Contents:
-	- Either 5 <button>s, 1 <text-input>, or 1 <select>
+	- Either:
+		- `buttons`: Up to 5 `<button>`s
+			- The buttons contained in the action row
+		- `select`: 1 `<select>`
+			- The select contained in the action row 
 */
 
 <actions>

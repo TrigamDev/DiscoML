@@ -1,22 +1,60 @@
-<actions>
-	<button id="primary-button" style="primary">
-		Primary Button
-	</button>
+/*
+	Represents:
+	- https://discord.com/developers/docs/components/reference#button
 
-	<button id="secondary-button" style="secondary" disabled=true>
-		Secondary Button (Disabled)
-	</button>
+	Aliases:
+	- `<button>`
 
-	<button id="destructive-button" style="danger">
-		Delete RAM!
-	</button>
+	Properties:
+	- `id?`: `string`
+		- Identifier to reference the button
+	- `style`: `string`
+		- The style of the button
+		- Can be one of:
+			- `"primary"`
+			- `"secondary"`
+			- `"success"`
+			- `"danger"`
+			- `"link"`
+			- `"premium"`
+	- `disabled`: `boolean`
+		- Whether the button is disabled (default: `false`)
+	- `sku_id?`: `snowflake`
+		- Identifier for a purchasable SKU
+		- Only avaiable when the `style` is `"premium"`
 
-	/*
-		`style` property is ignored if the button contains a link,
-		defaulting to `style="link"`
-	*/
-	<button id="link-button" style="link">
-		<link to="https://www.example.com">Example.com</link>
-		<emoji>🔗</emoji>
-	</button>
-</actions>
+	Contents:
+	- `label?`: 1 `<label>`
+		- The label of the button
+		- Not available when the `style` is `"link"`
+	- `emoji?`: 1 `<emoji>`
+		- An emoji to display alongside the label
+	- `link?`: 1 `<link>`
+		- The link the button leads to
+		- Only available when the `style` is `"link"`
+*/
+
+<button id="primary-button" style="primary">
+	<label>Primary Button</label>
+</button>
+
+<button id="secondary-button" style="secondary" disabled=true>
+	<label>Secondary Button (Disabled)</label>
+</button>
+
+<button id="successful-button" style="success">
+	<label>Complete</label>
+</button>
+
+<button id="destructive-button" style="danger">
+	<label>Delete RAM!</label>
+</button>
+
+<button id="link-button" style="link">
+	<link to="https://www.example.com">Example.com</link>
+	<emoji>🔗</emoji>
+</button>
+
+<button id="purchase-button" style="premium" sku_id="1088510058284990888">
+	<label>Buy gold!</label>
+</button>

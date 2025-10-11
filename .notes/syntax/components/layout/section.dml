@@ -1,11 +1,18 @@
 /*
-	Represents: https://discord.com/developers/docs/components/reference#section
+	Represents:
+	- https://discord.com/developers/docs/components/reference#section
 
-	Properties: None
+	Aliases:
+	- `<section>`
+
+	Properties:
+	- None
 
 	Contents:
-	- Up to 3 <text>s
-	- [Required] 1 <accessory>
+	- `content`: 1 to 3 `<text>`s
+		- The content contextually associated with the `accessory`
+	- `accessory`: 1 `<button>` or 1 `<thumbnail>`
+		- The accessory of the section
 */
 
 <section>
@@ -13,22 +20,5 @@
 	<text>This is a really cool section!</text>
 	<subtext>Well, maybe it's only <italic>kinda</italic> cool, but...</subtext>
 
-	<accessory>
-		<thumbnail url="https://picsum.photos/256"/>
-	</accessory>
-</section>
-
-
-
-/*
-	Represents: section.accessory
-
-	Properties: none
-
-	Contents:
-	- [Required] Either 1 <media> or 1 <button>
-*/
-
-<accessory>
 	<thumbnail url="https://picsum.photos/256"/>
-</accessory>
+</section>
