@@ -3,12 +3,15 @@
 	- `label` field of https://discord.com/developers/docs/components/reference#button
 	- `label` field of https://discord.com/developers/docs/components/reference#string-select-select-option-structure
 
+	Aliases:
+	- `<label>`
+
 	Properties:
 	- None
 
 	Contents:
-	- `label`: `string`
-		- A string of text
+	- `string`
+		- A label
 */
 
 <label>

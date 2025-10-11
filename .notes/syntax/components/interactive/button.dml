@@ -6,55 +6,69 @@
 	- `<button>`
 
 	Properties:
-	- `id?`: `string`
+	- `id`: `string`
 		- Identifier to reference the button
-	- `style`: `string`
+		- Max of 100 characters
+		- Optional
+	- `style`: `string | number`
 		- The style of the button
 		- Can be one of:
-			- `"primary"`
-			- `"secondary"`
-			- `"success"`
-			- `"danger"`
-			- `"link"`
-			- `"premium"`
+			- `"primary"` or `1`
+			- `"secondary"` or `2`
+			- `"success"` or `3`
+			- `"danger"` or `4`
+			- `"link"` or `5`
+			- `"premium"` or `6`
 	- `disabled`: `boolean`
-		- Whether the button is disabled (default: `false`)
-	- `sku_id?`: `snowflake`
-		- Identifier for a purchasable SKU
-		- Only avaiable when the `style` is `"premium"`
+		- Whether the button is disabled
+		- Optional
+		- Defaults to `false`
 
 	Contents:
-	- `label?`: 1 `<label>`
+	- 1 `<label>`
 		- The label of the button
+		- Max of 80 characters
+		- Optional
 		- Not available when the `style` is `"link"`
-	- `emoji?`: 1 `<emoji>`
+	- 1 `<emoji>`
 		- An emoji to display alongside the label
-	- `link?`: 1 `<link>`
+		- Optional
+	- 1 `<link>`
 		- The link the button leads to
+		- Max of 512 characters
+		- Optional
 		- Only available when the `style` is `"link"`
+	- 1 `<snowflake>`
+		- The identifier for a purchasable SKU
+		- The `type` of the `<snowflake>` must be `"sku"`
+		- Optional
+		- Only available when the `style` is `"premium"`
 */
 
 <button id="primary-button" style="primary">
 	<label>Primary Button</label>
 </button>
 
-<button id="secondary-button" style="secondary" disabled=true>
+<button id="secondary-button" style=2 disabled=true>
 	<label>Secondary Button (Disabled)</label>
 </button>
 
 <button id="successful-button" style="success">
+	<emoji>✅</emoji>
 	<label>Complete</label>
 </button>
 
 <button id="destructive-button" style="danger">
+	<emoji>🗑️</emoji>
 	<label>Delete RAM!</label>
 </button>
 
 <button id="link-button" style="link">
-	<link to="https://www.example.com">Example.com</link>
 	<emoji>🔗</emoji>
+	<link to="https://www.example.com">Example.com</link>
 </button>
 
-<button id="purchase-button" style="premium" sku_id="1088510058284990888">
+<button id="purchase-button" style="premium">
 	<label>Buy gold!</label>
+	<snowflake id="1088510058284990888" type="sku"/>
 </button>

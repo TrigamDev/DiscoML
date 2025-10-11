@@ -1,0 +1,54 @@
+/*
+	Represents:
+	- https://discord.com/developers/docs/components/reference#text-input
+
+	Aliases:
+	- `<input>`
+	- `<text-input>`
+		- The `type` property will be unavailable and force-set to `"text"`
+
+	Properties:
+	- `id`: `string`
+		- Identifier to reference the text input
+		- Max of 100 characters
+		- Optional
+	- `type`: `string`
+		- The type of the input
+		- Can be one of:
+			`"text"`
+		- Optional
+		- Defaults to `"text"`
+	- `style`: `string | number`
+		- The style of the text input
+		- Can be one of:
+			- `"short"` or `1`
+			- `"paragraph"` or `2`
+	- `min`: `number`
+		- The minimum length for the input text
+		- Between `0` and `4000`
+		- Optional
+		- Defaults to `0`
+	- `max`: `number`
+		- The maximum length for the input text
+		- Between `1` and `4000`
+		- Optional
+		- Defaults to `4000`
+	- `placeholder`: `string`
+		- A placeholder string to display when there's no text input
+		- Max of 100 characters
+		- Optional
+	- `required`: `boolean`
+		- Whether the text input is required to be filled
+		- Optional
+		- Defaults to `true`
+
+	Contents:
+	- `string`
+		- A value to pre-fill the text input with
+		- Max of 4000 characters
+		- Optional
+*/
+
+<text-input id="text-input" style="short" min=0 max=100 placeholder="Apple" required=true>
+	Apple
+</text-input>

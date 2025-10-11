@@ -1,0 +1,58 @@
+/*
+	Represents:
+	- https://discord.com/developers/docs/components/reference#channel-select
+
+	Aliases:
+	- `<channel-select>`
+
+	Properties:
+	- `id`: `string`
+		- Identifier to reference the channel select
+		- Max of 100 characters
+		- Optional
+	- `channel-types`: `(string | number)[]`
+		- The types of channels to include
+		- Can contain any of:
+			- `"guild_text"` or `0`
+			- `"dm"` or `1`
+			- `"guild_voice"` or `2`
+			- `"group_dm"` or `3`
+			- `"guild_category"` or `4`
+			- `"guild_announcement"` or `5`
+			- `"announcement_thread"` or `10`
+			- `"public_thread"` or `11`
+			- `"private_thread"` or `12`
+			- `"guild_stage_voice"` or `13`
+			- `"guild_directory"` or `14`
+			- `"guild_forum"` or `15`
+			- `"guild_media"` or `16`
+		- Optional
+	- `min`: `number`
+		- The minimum number of options that must be chosen
+		- Between `0` and `25`
+		- Optional
+		- Defaults to `1`
+	- `max`: `number`
+		- The maximum number of options that can be chosen
+		- Max of `25`
+		- Optional
+		- Defaults to `1`
+	- `placeholder`: `string`
+		- A placeholder string to display when there's no selection made
+		- Max of 150 characters
+		- Optional
+	- `required`: `boolean`
+		- Only available when the channel select is a child of a `<modal>`
+		- Optional
+		- Defaults to `true`
+	- `disabled`: `boolean`
+		- Whether the channel select is disabled
+		- Not available when the channel select is a child of a `<modal>`
+		- Optional
+		- Defaults to `false`
+
+	Contents:
+	- Up to 25 `<snowflake>`s
+		- Values to auto-populate the channel select with
+		- The `type` of the `<snowflake>` must be `"channel"`
+*/

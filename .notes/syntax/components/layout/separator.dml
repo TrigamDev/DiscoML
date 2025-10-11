@@ -6,13 +6,20 @@
 	- `<separator>`
 	
 	Properties:
-	- `spacing`: `string`
+	- `spacing`: `string | number`
 		- The amount of spacing to use
 		- Can be either:
-			- `"small"`
-			- `"large"`
+			- `"small"` or `1`
+			- `"large"` or `2`
+		- Optional
+		- Defaults to `"small"`
 	- `divider`: `boolean`
 		- Whether to show a visible divider
+		- Optional
+		- Defaults to `true`
+
+	Contents:
+	- None
 */
 
-<separator id="separator" spacing="small" divider=true />
+<separator id="separator" spacing="small" divider=true/>

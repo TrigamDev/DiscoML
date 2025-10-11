@@ -2,11 +2,15 @@
 	Represents:
 	- https://discord.com/developers/docs/components/reference#text-display
 
+	Aliases:
+	- `<text>`
+	- `<text-display>`
+
 	Properties:
 	- None
 
 	Contents:
-	- `text`: `string`
+	- `string`
 		- A string of text
 */
 

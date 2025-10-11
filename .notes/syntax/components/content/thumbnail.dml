@@ -1,0 +1,26 @@
+/*
+	Represents:
+	- https://discord.com/developers/docs/components/reference#thumbnail
+
+	Aliases:
+	- `<thumbnail>`
+
+	Properties:
+	- `alt`: `string`
+		- Alt text for the thumbnail
+		- Max of 1024 characters
+		- Optional
+	- `spoiler`: `boolean`
+		- Whether the thumbnail is a spoiler
+		- Optional
+		- Defaults to `false`
+
+	Contents:
+	- 1 `<url>`
+		- A URL pointing to the media
+		- The `label` of the `<url>` will be ignored
+*/
+
+<thumbnail alt="A really interesting image" spoiler=false>
+	<link to="https://picsum.photos/512"/>
+</thumbnail>

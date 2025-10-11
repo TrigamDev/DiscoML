@@ -1,0 +1,29 @@
+/*
+	Represents:
+	- `<string-select>`
+	- `<user-select>`
+	- `<role-select>`
+	- `<channel-select>`
+	- `<mentionable-select>`
+
+	Aliases:
+	- `<select>`
+
+	Properties:
+	- `type`: `string`
+		- The type of select menu it is
+		- This will be inferred by the contained options if unspecified
+		- Can be one of:
+			- `"string"`
+			- `"user"`
+			- `"role"`
+			- `"channel"`
+			- `"mentionable"`
+
+	Maps:
+	- `type = "string"` -> `<string-select>`
+	- `type = "user"` -> `<user-select>`
+	- `type = "role"` -> `<role-select>`
+	- `type = "channel"` -> `<channel-select>`
+	- `type = "mentionable"` -> `<mentionable-select>`
+*/

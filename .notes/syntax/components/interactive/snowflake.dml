@@ -1,0 +1,29 @@
+/*
+	Represents:
+	- https://discord.com/developers/docs/components/reference#user-select-select-default-value-structure
+
+	Aliases:
+	- `<snowflake>`
+
+	Properties:
+	- `id`: `snowflake`
+		- The ID of the user, role, or channel
+	- `type`: `string`
+		- The type of value the `id` Represents
+		- Can be one of:
+			- `"user"`
+			- `"role"`
+			- `"channel"`
+			- `"sku"`
+
+	Contents:
+	- None
+*/
+
+<snowflake id="480828680604614675" type="user"/>
+
+<snowflake id="1366158838931128432" type="role"/>
+
+<snowflake id="1050447790112772136" type="channel"/>
+
+<snowflake id="1088510058284990888" type="sku"/>

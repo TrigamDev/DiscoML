@@ -2,12 +2,15 @@
 	Represents:
 	- `description` field of https://discord.com/developers/docs/components/reference#string-select-select-option-structure
 
+	Aliases:
+	- `<description>`
+
 	Properties:
 	- None
 
 	Contents:
-	- `description`: `string`
-		- A string of text
+	- `string`
+		- A description
 */
 
 <description>

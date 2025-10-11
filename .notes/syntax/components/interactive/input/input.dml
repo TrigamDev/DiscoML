@@ -1,0 +1,16 @@
+/*
+	Represents:
+	- `<text-input>`
+
+	Aliases:
+	- `<input>`
+
+	Properties:
+	- `type`: `string`
+		- The type of the input
+		- Can be one of:
+			`"text"`
+
+	Maps:
+	- `type = "text"` -> `<text-input>`
+*/

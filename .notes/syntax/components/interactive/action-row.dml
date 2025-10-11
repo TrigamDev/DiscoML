@@ -12,9 +12,9 @@
 
 	Contents:
 	- Either:
-		- `buttons`: Up to 5 `<button>`s
+		- Up to 5 `<button>`s
 			- The buttons contained in the action row
-		- `select`: 1 `<select>`
+		- 1 `<select>`
 			- The select contained in the action row 
 */
 

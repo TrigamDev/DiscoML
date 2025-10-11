@@ -16,9 +16,17 @@
 */
 
 <section>
-	<header level=1>Wow!</header>
-	<text>This is a really cool section!</text>
-	<subtext>Well, maybe it's only <italic>kinda</italic> cool, but...</subtext>
+	<text>
+		<header level=1>Wow!</header>
+	</text>
+	<text>
+		This is a really cool section!
+	</text>
+	<text>
+		<subtext>Well, maybe it's only <italic>kinda</italic> cool, but...</subtext>
+	</text>
 
-	<thumbnail url="https://picsum.photos/256"/>
+	<thumbnail alt="A really interesting image" spoiler=false>
+		<link to="https://picsum.photos/512"/>
+	</thumbnail>
 </section>
