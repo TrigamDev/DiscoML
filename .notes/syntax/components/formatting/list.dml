@@ -1,0 +1,32 @@
+/*
+	Represents:
+	- - List item
+	- * List item
+	- 1. List item
+
+	Aliases:
+	- `<list>`
+	- `<unordered-list>`
+		- The `type` property will be unavailable and force-set to `"unordered"`
+	- `<ul>`
+		- The `type` property will be unavailable and force-set to `"unordered"`
+	- `<ordered-list>`
+		- The `type` property will be unavailable and force-set to `"ordered"`
+	- `<ol>`
+		- The `type` property will be unavailable and force-set to `"ordered"`
+
+	Properties:
+	- `type`: `string`
+		- The type of list
+		- Can be one of:
+			- `"unordered"`
+			- `"ordered"`
+
+	Contents:
+	- `<item>`s
+		- The list items
+*/
+
+<list type="unordered">
+	/* ... */
+</list>

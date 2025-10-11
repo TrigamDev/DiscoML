@@ -1,0 +1,21 @@
+/*
+	Represents:
+	- *Text*
+	- _Text_
+
+	Aliases:
+	- `<italics>`
+	- `<i>`
+	- `<em>`
+
+	Properties:
+	- None
+
+	Contents:
+	- `string`
+		- A string of text
+*/
+
+<italics>
+	Italicized text
+</italics>

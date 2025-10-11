@@ -1,0 +1,19 @@
+/*
+	Represents:
+	- __Text__
+
+	Aliases:
+	- `<underline>`
+	- `<u>`
+
+	Properties:
+	- None
+
+	Contents:
+	- `string`
+		- A string of text
+*/
+
+<underline>
+	Underlined text
+</underline>

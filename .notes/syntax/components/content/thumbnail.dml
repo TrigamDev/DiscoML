@@ -16,9 +16,9 @@
 		- Defaults to `false`
 
 	Contents:
-	- 1 `<url>`
-		- A URL pointing to the media
-		- The `label` of the `<url>` will be ignored
+	- 1 `<link>`
+		- A link pointing to the media
+		- The `label` of the `<link>` will be ignored
 */
 
 <thumbnail alt="A really interesting image" spoiler=false>

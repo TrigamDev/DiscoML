@@ -1,0 +1,19 @@
+/*
+	Represents:
+	- -# Text
+
+	Aliases:
+	- `<subtext>`
+	- `<sub>`
+
+	Properties:
+	- None
+
+	Contents:
+	- `string`
+		- A string of text
+*/
+
+<subtext>
+	Subtext
+</subtext>

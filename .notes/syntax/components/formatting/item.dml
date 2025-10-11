@@ -1,0 +1,28 @@
+/*
+	Represents:
+	- List item
+
+	Aliases:
+	- `<item>`
+	- `<list-item>`
+	- `<li>`
+
+	Properties:
+	- None
+
+	Contents:
+	- `string`
+		- A string of text
+*/
+
+<item>
+	List item
+</item>
+
+<list-item>
+	List item
+</list-item>
+
+<li>
+	List item
+</li>

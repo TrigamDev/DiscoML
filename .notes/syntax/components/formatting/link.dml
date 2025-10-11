@@ -1,0 +1,21 @@
+/*
+	Represents:
+	- [Text](https://www.example.com)
+
+	Aliases:
+	- `<link>`
+	- `<url>`
+	- `<a>`
+
+	Properties:
+	- `to`: `string`
+		- The URL to link to
+
+	Contents:
+	- `string`
+		- The label of the link
+*/
+
+<link to="https://www.example.com">
+	Example.com
+</link>

@@ -1,0 +1,20 @@
+/*
+	Represents:
+	- **Text**
+
+	Aliases:
+	- `<bold>`
+	- `<b>`
+	- `<strong>`
+
+	Properties:
+	- None
+
+	Contents:
+	- `string`
+		- A string of text
+*/
+
+<bold>
+	Bolded text
+</bold>

@@ -1,0 +1,36 @@
+/*
+	Represents:
+	- # Header
+	- ## Header
+	- ### Header
+
+	Aliases:
+	- `<header>`
+	- `<h>`
+	- `<h1>`
+		- The `level` property will be unavailable and force-set to `1`
+	- `<h2>`
+		- The `level` property will be unavailable and force-set to `2`
+	- `<h3>`
+		- The `level` property will be unavailable and force-set to `3`
+
+	Properties:
+	- `level`: `number`
+		- The level of header to use
+
+	Contents:
+	- `string`
+		- A string of text
+*/
+
+<header level=1>
+	Big Header
+</header>
+
+<h level=2>
+	Smaller Header
+</h>
+
+<h3>
+	Even Smaller Header
+</h3>
