@@ -1,21 +1,61 @@
+import { DmlParseError } from "@disco/error"
+import type { LocationSpan } from "../location"
+
+type StringFunction = ()=> string
+type NumberFunction = ()=> number
+type BooleanFunction = ()=> boolean
+
 type DmlNodeTag = string
-type DmlNodeAttributes = Map<string, string | ( ()=> string )>
+type DmlNodeAttributes = Map<string,
+	string | number | boolean
+	| StringFunction | NumberFunction | BooleanFunction
+>
 type DmlNodeContent = string | ( ()=> string ) | DmlNode[] | null
 
 class DmlNode {
 	tag: DmlNodeTag
 	attributes: DmlNodeAttributes
 	content: DmlNodeContent
-	constructor ( tag: DmlNodeTag, attributes: DmlNodeAttributes, content: DmlNodeContent ) {
+	span: LocationSpan
+
+	constructor (
+		tag: DmlNodeTag,
+		attributes: DmlNodeAttributes,
+		content: DmlNodeContent,
+		span: LocationSpan
+	) {
 		this.tag = tag
 		this.attributes = attributes
 		this.content = content
+		this.span = span
+	}
+
+	/* TODO: validate value type?
+	   ROADBLOCK: how to do this in TS? */
+	assertAttributes ( required: string[] ) {
+		const missing = required.filter( ( key ) => !this.attributes.has( key ) )
+
+		if ( !missing.length ) {
+			return
+		}
+
+		const { start } = this.span
+		throw new DmlParseError(
+			`<${ this.tag }> element at ${ start } requires the tags: ${ missing.join( ", " ) }`
+		)
 	}
 }
 
-interface MessageComponent {
-	// eslint-disable-next-line no-unused-vars
-	render( componentData: object ): object
+abstract class MessageComponent {
+	constructor ( node: DmlNode ) {
+		// ...because you can't put a constructor in an interface...
+		this.assignNode( node )
+	}
+
+	/* eslint-disable no-unused-vars */
+	abstract assignNode ( node: DmlNode ): void // Should throw on failure
+	abstract render ( componentData: object ): object
+	/* eslint-enable no-unused-vars */
 }
 
 /**
@@ -25,8 +65,12 @@ interface MessageComponent {
  */
 class Row implements MessageComponent {
 	private buttons: Select | Button[]
+	assignNode ( node: DmlNode ): void {
+
+	}
+
 	render ( componentData: object ): object {
-		return componentData ?? this
+
 	}
 }
 
@@ -54,8 +98,12 @@ class Button implements MessageComponent {
 	private id: string | null
 	private label: string
 	private disabled: boolean
+	assignNode ( node: DmlNode ): void {
+
+	}
+
 	render ( componentData: object ): object {
-		return componentData ?? this
+
 	}
 }
 
@@ -64,8 +112,12 @@ class Button implements MessageComponent {
  */
 class Text implements MessageComponent {
 	private content: string
+	assignNode ( node: DmlNode ): void {
+
+	}
+
 	render ( componentData: object ): object {
-		return componentData ?? this
+
 	}
 }
 
@@ -77,8 +129,12 @@ class Text implements MessageComponent {
 class Section implements MessageComponent {
 	private text: Text[]
 	private button: Button | null
+	assignNode ( node: DmlNode ): void {
+
+	}
+
 	render ( componentData: object ): object {
-		return componentData ?? this
+
 	}
 }
 
@@ -94,8 +150,12 @@ class Select implements MessageComponent {
 	private min: number | null
 	private max: number | null
 	private disabled: boolean
+	assignNode ( node: DmlNode ): void {
+
+	}
+
 	render ( componentData: object ): object {
-		return componentData ?? this
+
 	}
 }
 
@@ -108,8 +168,12 @@ class Option implements MessageComponent {
 	private default: boolean
 	private emoji: string | null
 	private description: string | null
+	assignNode ( node: DmlNode ): void {
+
+	}
+
 	render ( componentData: object ): object {
-		return componentData ?? this
+
 	}
 }
 
@@ -122,8 +186,12 @@ class Container implements MessageComponent {
 	private children: ( Text | Section | Row | File | MediaGallery | Separator )[]
 	private color: number | null
 	private spoiler: boolean
+	assignNode ( node: DmlNode ): void {
+
+	}
+
 	render ( componentData: object ): object {
-		return componentData ?? this
+
 	}
 }
 
@@ -133,8 +201,12 @@ class Container implements MessageComponent {
 class Title implements MessageComponent {
 	private content: string
 	private url: string | null
+	assignNode ( node: DmlNode ): void {
+
+	}
+
 	render ( componentData: object ): object {
-		return componentData ?? this
+
 	}
 }
 
@@ -143,8 +215,12 @@ class Title implements MessageComponent {
  */
 class Description implements MessageComponent {
 	private content: string
+	assignNode ( node: DmlNode ): void {
+
+	}
+
 	render ( componentData: object ): object {
-		return componentData ?? this
+
 	}
 }
 
@@ -154,8 +230,12 @@ class Description implements MessageComponent {
 class Image implements MessageComponent {
 	private url: string
 	private isThumbnail: boolean
+	assignNode ( node: DmlNode ): void {
+
+	}
+
 	render ( componentData: object ): object {
-		return componentData ?? this
+
 	}
 }
 
@@ -166,8 +246,12 @@ class Author implements MessageComponent {
 	private name: string
 	private icon: string | null
 	private url: string | null
+	assignNode ( node: DmlNode ): void {
+
+	}
+
 	render ( componentData: object ): object {
-		return componentData ?? this
+
 	}
 }
 
@@ -178,8 +262,12 @@ class Field implements MessageComponent {
 	private name: string
 	private value: string
 	private inline: boolean
+	assignNode ( node: DmlNode ): void {
+
+	}
+
 	render ( componentData: object ): object {
-		return componentData ?? this
+
 	}
 }
 
@@ -189,8 +277,12 @@ class Field implements MessageComponent {
 class Footer implements MessageComponent {
 	private content: string
 	private icon: string | null
+	assignNode ( node: DmlNode ): void {
+
+	}
+
 	render ( componentData: object ): object {
-		return componentData ?? this
+
 	}
 }
 
@@ -202,8 +294,12 @@ class Footer implements MessageComponent {
  */
 class Timestamp implements MessageComponent {
 	private date: Date | null
+	assignNode ( node: DmlNode ): void {
+
+	}
+
 	render ( componentData: object ): object {
-		return componentData ?? this
+
 	}
 }
 
@@ -220,8 +316,12 @@ enum SeparatorSpacing {
 class Separator implements MessageComponent {
 	private spacing: SeparatorSpacing
 	private divider: boolean
+	assignNode ( node: DmlNode ): void {
+
+	}
+
 	render ( componentData: object ): object {
-		return componentData ?? this
+
 	}
 }
 
@@ -232,8 +332,12 @@ class Separator implements MessageComponent {
  */
 class MediaGallery implements MessageComponent {
 	private children: MediaGalleryItem[]
+	assignNode ( node: DmlNode ): void {
+
+	}
+
 	render ( componentData: object ): object {
-		return componentData ?? this
+
 	}
 }
 
@@ -246,8 +350,12 @@ class MediaGalleryItem implements MessageComponent {
 	private url: string
 	private alt: string | null
 	private spoiler: boolean
+	assignNode ( node: DmlNode ): void {
+
+	}
+
 	render ( componentData: object ): object {
-		return componentData ?? this
+
 	}
 }
 
@@ -256,8 +364,12 @@ class MediaGalleryItem implements MessageComponent {
  */
 class File implements MessageComponent {
 	private url: string
+	assignNode ( node: DmlNode ): void {
+
+	}
+
 	render ( componentData: object ): object {
-		return componentData ?? this
+
 	}
 }
 
