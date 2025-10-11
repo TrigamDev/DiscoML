@@ -83,7 +83,7 @@ class Section implements MessageComponent {
 }
 
 /**
- * <select id="" placeholder="" min=2 max=3>
+ * <select id="" placeholder="" min=2 max=3 disabled>
  *    etc.
  * </select>
  */
@@ -93,6 +93,7 @@ class Select implements MessageComponent {
 	private placeholder: string | null
 	private min: number | null
 	private max: number | null
+	private disabled: boolean
 	render ( componentData: object ): object {
 		return componentData ?? this
 	}
@@ -262,6 +263,8 @@ class File implements MessageComponent {
 // TODO: make constructors and make them throw errors when shit goes wrong
 
 // TODO: finally, render component
+
+// TODO: Add DML directive support
 
 // eslint-disable-next-line no-unused-vars
 const TagNodeMap = new Map<string, new ( node: DmlNode )=> MessageComponent>( [
