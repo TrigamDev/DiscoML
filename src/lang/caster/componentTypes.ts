@@ -1,3 +1,6 @@
+/* eslint-disable no-empty-function */
+/* eslint-disable no-unused-vars */
+/* eslint-disable class-methods-use-this */
 import type { Snowflake } from "discord.js" // For emojis later
 import type { DmlNode } from "../parser/dmlNode"
 
@@ -7,10 +10,8 @@ export abstract class MessageComponent {
 		this.assignNode( node )
 	}
 
-	/* eslint-disable no-unused-vars */
 	abstract assignNode ( node: DmlNode ): void // Should throw on failure
 	abstract render ( componentData: object ): object
-	/* eslint-enable no-unused-vars */
 }
 
 /**
@@ -334,7 +335,7 @@ class File implements MessageComponent {
 
 // TODO: Add DML directive support (with strict return types?)
 
-// eslint-disable-next-line no-unused-vars
+
 const TagNodeMap = new Map<string, new ( node: DmlNode )=> MessageComponent>( [
 	[ "row", Row ],
 	[ "button", Button ],
