@@ -24,6 +24,7 @@ interface MessageComponent {
  * </row>
  */
 class Row implements MessageComponent {
+	private buttons: Select | Button[]
 	render ( componentData: object ): object {
 		return componentData ?? this
 	}
@@ -34,10 +35,24 @@ class Row implements MessageComponent {
  * exclusively or
  * <button style="primary" id="aaa">Label</button>
  * exclusively or
- * <button style="secondary|success|danger" onclick=@( expression )>Label</button>
+ * <button style="secondary|success|danger">Label</button>
  * all of them can have the `disabled` attribute too
  */
+/* eslint-disable no-magic-numbers */
+enum ButtonStyle {
+	Primary = 1,
+	Secondary = 2,
+	Success = 3,
+	Danger = 4,
+	Link = 5
+}
+/* eslint-enable no-magic-numbers */
+
 class Button implements MessageComponent {
+	private style: ButtonStyle
+	private url: string | null
+	private id: string | null
+	private label: string
 	render ( componentData: object ): object {
 		return componentData ?? this
 	}
@@ -47,6 +62,7 @@ class Button implements MessageComponent {
  * <text>Text Content</text>
  */
 class Text implements MessageComponent {
+	private content: string
 	render ( componentData: object ): object {
 		return componentData ?? this
 	}
@@ -58,6 +74,7 @@ class Text implements MessageComponent {
  * </section>
  */
 class Section implements MessageComponent {
+	// TODO: what the fuck kinda kids does Section have again?
 	render ( componentData: object ): object {
 		return componentData ?? this
 	}
@@ -67,10 +84,13 @@ class Section implements MessageComponent {
  * <select id="" placeholder="" min=2 max=3>
  *    etc.
  * </select>
- *
- * <select placeholder="" min=2 max=3 onclick=@( expression )>
  */
 class Select implements MessageComponent {
+	private options: Option[]
+	private id: string
+	private placeholder: string | null
+	private min: number | null
+	private max: number | null
 	render ( componentData: object ): object {
 		return componentData ?? this
 	}
@@ -80,6 +100,11 @@ class Select implements MessageComponent {
  * <option label="" default=true emoji="" description="">Value Data</option>
  */
 class Option implements MessageComponent {
+	private label: string
+	private value: string
+	private default: boolean
+	private emoji: string | null
+	private description: string | null
 	render ( componentData: object ): object {
 		return componentData ?? this
 	}
@@ -91,6 +116,7 @@ class Option implements MessageComponent {
  * </container>
  */
 class Container implements MessageComponent {
+	// TODO: what the fuck kinda kids does Container have again?
 	render ( componentData: object ): object {
 		return componentData ?? this
 	}
@@ -100,6 +126,8 @@ class Container implements MessageComponent {
  * <title url="https://example.com">Embed Title</title>
  */
 class Title implements MessageComponent {
+	private content: string
+	private url: string | null
 	render ( componentData: object ): object {
 		return componentData ?? this
 	}
@@ -109,6 +137,7 @@ class Title implements MessageComponent {
  * <description>Embed Description</description>
  */
 class Description implements MessageComponent {
+	private content: string
 	render ( componentData: object ): object {
 		return componentData ?? this
 	}
@@ -118,6 +147,8 @@ class Description implements MessageComponent {
  * <image url="https://example.com/etc.png" isThumbnail=bool />
  */
 class Image implements MessageComponent {
+	private url: string
+	private isThumbnail: boolean
 	render ( componentData: object ): object {
 		return componentData ?? this
 	}
@@ -127,15 +158,21 @@ class Image implements MessageComponent {
  * <author url="https://example.com" icon="https://example.com/etc.png">AuthorName</author>
  */
 class Author implements MessageComponent {
+	private name: string
+	private icon: string | null
+	private url: string | null
 	render ( componentData: object ): object {
 		return componentData ?? this
 	}
 }
 
 /**
- * <field name="string" inline=bool>value text</field>
+ * <field name="string" inline>value text</field>
  */
 class Field implements MessageComponent {
+	private name: string
+	private value: string
+	private inline: boolean
 	render ( componentData: object ): object {
 		return componentData ?? this
 	}
@@ -145,6 +182,8 @@ class Field implements MessageComponent {
  * <footer icon="https://example.com/etc.png">footer text</footer>
  */
 class Footer implements MessageComponent {
+	private content: string
+	private icon: string | null
 	render ( componentData: object ): object {
 		return componentData ?? this
 	}
@@ -157,6 +196,7 @@ class Footer implements MessageComponent {
  * for "now"
  */
 class Timestamp implements MessageComponent {
+	private date: Date | null
 	render ( componentData: object ): object {
 		return componentData ?? this
 	}
@@ -167,7 +207,14 @@ class Timestamp implements MessageComponent {
  * or
  * <separator spacing="large"/>
  */
+enum SeparatorSpacing {
+	Small,
+	Large
+}
+
 class Separator implements MessageComponent {
+	private spacing: SeparatorSpacing
+	private divider: boolean
 	render ( componentData: object ): object {
 		return componentData ?? this
 	}
@@ -179,6 +226,7 @@ class Separator implements MessageComponent {
  * </gallery>
  */
 class MediaGallery implements MessageComponent {
+	private children: MediaGalleryItem[]
 	render ( componentData: object ): object {
 		return componentData ?? this
 	}
@@ -190,6 +238,9 @@ class MediaGallery implements MessageComponent {
  * <media url="" alt="" spoiler />
  */
 class MediaGalleryItem implements MessageComponent {
+	private url: string
+	private alt: string | null
+	private spoiler: boolean
 	render ( componentData: object ): object {
 		return componentData ?? this
 	}
@@ -199,14 +250,17 @@ class MediaGalleryItem implements MessageComponent {
  * <file url="" />
  */
 class File implements MessageComponent {
+	private url: string
 	render ( componentData: object ): object {
 		return componentData ?? this
 	}
 }
 
+// TODO: instance fields for the classes
+
 // TODO: make constructors and make them throw errors when shit goes wrong
 
-// TODO: instance fields for the classes
+// TODO: finally, render component
 
 // eslint-disable-next-line no-unused-vars
 const TagNodeMap = new Map<string, new ( node: DmlNode )=> MessageComponent>( [
