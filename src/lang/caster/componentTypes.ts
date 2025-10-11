@@ -1,52 +1,7 @@
-import { DmlParseError } from "@disco/error"
-import type { LocationSpan } from "../location"
+import type { Snowflake } from "discord.js" // For emojis later
+import type { DmlNode } from "../parser/dmlNode"
 
-type StringFunction = ()=> string
-type NumberFunction = ()=> number
-type BooleanFunction = ()=> boolean
-
-type DmlNodeTag = string
-type DmlNodeAttributes = Map<string,
-	string | number | boolean
-	| StringFunction | NumberFunction | BooleanFunction
->
-type DmlNodeContent = string | ( ()=> string ) | DmlNode[] | null
-
-class DmlNode {
-	tag: DmlNodeTag
-	attributes: DmlNodeAttributes
-	content: DmlNodeContent
-	span: LocationSpan
-
-	constructor (
-		tag: DmlNodeTag,
-		attributes: DmlNodeAttributes,
-		content: DmlNodeContent,
-		span: LocationSpan
-	) {
-		this.tag = tag
-		this.attributes = attributes
-		this.content = content
-		this.span = span
-	}
-
-	/* TODO: validate value type?
-	   ROADBLOCK: how to do this in TS? */
-	assertAttributes ( required: string[] ) {
-		const missing = required.filter( ( key ) => !this.attributes.has( key ) )
-
-		if ( !missing.length ) {
-			return
-		}
-
-		const { start } = this.span
-		throw new DmlParseError(
-			`<${ this.tag }> element at ${ start } requires the tags: ${ missing.join( ", " ) }`
-		)
-	}
-}
-
-abstract class MessageComponent {
+export abstract class MessageComponent {
 	constructor ( node: DmlNode ) {
 		// ...because you can't put a constructor in an interface...
 		this.assignNode( node )

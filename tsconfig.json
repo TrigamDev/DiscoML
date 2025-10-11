@@ -9,6 +9,7 @@
 			"@lexemizer/*": ["src/lang/waitbad/lexemizer/*"],
 			"@tokenizer/*": ["src/lang/tokenizer/*"],
 			"@parser/*": ["./src/lang/parser*"],
+			"@caster/*": ["./src/lang/caster*"],
 
 			"@test/*": ["./test/*"]
 		},
