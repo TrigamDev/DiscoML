@@ -53,6 +53,7 @@ class Button implements MessageComponent {
 	private url: string | null
 	private id: string | null
 	private label: string
+	private disabled: boolean
 	render ( componentData: object ): object {
 		return componentData ?? this
 	}
@@ -264,7 +265,7 @@ class File implements MessageComponent {
 
 // TODO: finally, render component
 
-// TODO: Add DML directive support
+// TODO: Add DML directive support (with strict return types?)
 
 // eslint-disable-next-line no-unused-vars
 const TagNodeMap = new Map<string, new ( node: DmlNode )=> MessageComponent>( [
